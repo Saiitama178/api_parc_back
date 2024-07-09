@@ -1,0 +1,22 @@
+package com.parc.api.model.dto;
+
+
+
+import com.parc.api.model.entity.ClasserId;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class CommentaireDto {
+
+    private int idCommentaire;
+    private String contenuCommentaire;
+    private int noteParc;
+
+
+
+
+}

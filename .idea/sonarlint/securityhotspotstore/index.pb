@@ -1,0 +1,21 @@
+
+~
+Napi_parc_back-master/api/src/main/java/com/parc/api/model/entity/Posseder.java,6\d\6d571be32ce8ce15a13de054a8821820c9469c53
+€
+Papi_parc_back-master/api/src/main/java/com/parc/api/model/entity/PossederId.java,6\f\6f0e6d4170f5b565703ae78fbde9e51d714e5984
+}
+Mapi_parc_back-master/api/src/main/java/com/parc/api/model/entity/Classer.java,a\a\aa0ba2afdd27f1a5229b990b05bf3377ee59713d
+}
+Mapi_parc_back-master/api/src/main/java/com/parc/api/model/dto/ClasserDTO.java,b\b\bb928f1fc2e7cbd8eab51e71c5320e2006d6c524
+}
+Mapi_parc_back-master/api/src/main/java/com/parc/api/model/dto/ClasserDto.java,1\7\177a2e08080983973a90446bbfc7e28c5fe5ee83
+…
+Uapi_parc_back-master/api/src/main/java/com/parc/api/repository/ClasserRepository.java,2\7\272fe2c74a9b572d4cf1dfcd2355f21439c2fde2
+ƒ
+Sapi_parc_back-master/api/src/main/java/com/parc/api/model/mapper/ClasserMapepr.java,6\8\68d602d8a9111d939a380c6d95857f23990fa595
+ƒ
+Sapi_parc_back-master/api/src/main/java/com/parc/api/model/mapper/ClasserMapper.java,2\f\2fbdf9e335a9953ecb4d66ab157d0aca614d317d
+
+Oapi_parc_back-master/api/src/main/java/com/parc/api/model/entity/ClasserId.java,1\9\197290bbf8e6803f48820a593affbc4beb9c8dc7
+P
+ api_parc_back-master/api/pom.xml,f\7\f772d3f703d9d7ffedf502c2509023f8d80abc17
