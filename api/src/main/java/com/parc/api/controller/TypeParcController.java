@@ -11,9 +11,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,5 +37,16 @@ public class TypeParcController {
                 .map(TypeParcMapper::toDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(typeParcDtos);
+    }
+
+    @GetMapping("/typeParc/{id}")
+    public ResponseEntity<TypeParcDto> getTypeParcById(@PathVariable Integer id) {
+        Optional<TypeParc> typeParc = typeParcRepository.findById(id);
+        if (typeParc.isPresent()) {
+            TypeParcDto typeParcDto = TypeParcMapper.toDto(typeParc.get());
+            return ResponseEntity.ok(typeParcDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

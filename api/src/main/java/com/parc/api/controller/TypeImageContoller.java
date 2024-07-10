@@ -37,10 +37,10 @@ public class TypeImageContoller {
 
     @GetMapping("/typeImage/{id}")
     public ResponseEntity<TypeImageDto> getTypeImageById(@PathVariable Integer id) {
-        Optional<TypeImage> pays = typeImageRepository.findById(id);
-        if (pays.isPresent()) {
-            TypeImageDto paysDto = TypeImageMapper.toDto(pays.get());
-            return ResponseEntity.ok(paysDto);
+        Optional<TypeImage> typeImage = typeImageRepository.findById(id);
+        if (typeImage.isPresent()) {
+            TypeImageDto typeImageDto = TypeImageMapper.toDto(typeImage.get());
+            return ResponseEntity.ok(typeImageDto);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -48,8 +48,8 @@ public class TypeImageContoller {
 
     @PostMapping("/typeImage")
     public ResponseEntity<TypeImageDto> createTypeImage(@RequestBody TypeImageDto typeImageDto) {
-        TypeImage pays = TypeImageMapper.toEntity(typeImageDto);
-        TypeImage savedPays = typeImageRepository.save(pays);
+        TypeImage typeImage = TypeImageMapper.toEntity(typeImageDto);
+        TypeImage savedPays = typeImageRepository.save(typeImage);
         TypeImageDto savedPayDto = TypeImageMapper.toDto(savedPays);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPayDto);
     }
