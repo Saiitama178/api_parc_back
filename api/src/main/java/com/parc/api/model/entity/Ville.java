@@ -17,7 +17,7 @@ public class Ville {
     private String nomVille;
 
     @Column(name = "code_porsatal", nullable = false, length = 5)
-    private String codePorsatal;
+    private String codePostal;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_region", nullable = false)
