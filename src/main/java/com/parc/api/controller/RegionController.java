@@ -35,7 +35,7 @@ public class RegionController {
     }
     //@CrossOrigin(origins = "http:localhost:3308")
     @CrossOrigin(origins = "http:localhost:3308")
-    @GetMapping("/regiom/{id}")
+    @GetMapping("/region/{id}")
     public ResponseEntity<RegionDto> getRegionById(@PathVariable Integer id) {
         Optional<Region> region = regionRepository.findById(id);
         if (region.isPresent()) {
@@ -49,7 +49,7 @@ public class RegionController {
     //chatGpt
     @Autowired
     private PaysRepository paysRepository;
-    @PostMapping("/regiom")
+    @PostMapping("/region")
     public ResponseEntity<Region> createRegion(@RequestBody Region region) {
         if (region.getIdPays() == null || region.getIdPays().getId() == null) {
             return ResponseEntity.badRequest().body(null);

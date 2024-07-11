@@ -10,14 +10,15 @@ import lombok.Setter;
 @Table(name = "ville")
 public class Ville {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_ville", nullable = false)
     private Integer id;
 
     @Column(name = "nom_ville", nullable = false, length = 50)
     private String nomVille;
 
-    @Column(name = "code_porsatal", nullable = false, length = 5)
-    private String codePorsatal;
+    @Column(name = "code_postal", nullable = false, length = 5)
+    private String codePostal;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_region", nullable = false)
