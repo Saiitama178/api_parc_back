@@ -28,7 +28,7 @@ public class ParkingController {
     }
 
     @GetMapping("/parking/{id}")
-    public ResponseEntity<ParkingDto> getById(@PathVariable int id) {
+    public ResponseEntity<ParkingDto> getParkingById(@PathVariable int id) {
         Optional<Parking> parking = parkingRepository.findById(id);
         if (parking.isPresent()) {
             ParkingDto parkingDto = ParkingMapper.toDto(parking.get());
