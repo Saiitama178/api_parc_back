@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "reseau_sociaux")
-public class ReseauSociaux {
+public class ReseauxSociaux {
     @Id
     @Column(name = "id_reseau_sociaux", nullable = false)
     private Integer id;

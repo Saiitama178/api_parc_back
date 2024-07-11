@@ -15,7 +15,7 @@ public class Posseder {
     @MapsId("idReseauSociaux")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_reseau_sociaux", nullable = false)
-    private ReseauSociaux idReseauSociaux;
+    private ReseauxSociaux idReseauSociaux;
 
     @MapsId("idParc")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

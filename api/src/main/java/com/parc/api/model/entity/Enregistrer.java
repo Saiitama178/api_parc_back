@@ -10,9 +10,9 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "enregister")
-public class Enregister {
+public class Enregistrer {
     @EmbeddedId
-    private EnregisterId id;
+    private EnregistrerId id;
 
     @MapsId("idParc")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

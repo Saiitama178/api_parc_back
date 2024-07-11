@@ -11,7 +11,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Embeddable
-public class EnregisterId implements java.io.Serializable {
+public class EnregistrerId implements java.io.Serializable {
     private static final long serialVersionUID = 89316960164708118L;
     @Column(name = "id_parc", nullable = false)
     private Integer idParc;
@@ -23,7 +23,7 @@ public class EnregisterId implements java.io.Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        EnregisterId entity = (EnregisterId) o;
+        EnregistrerId entity = (EnregistrerId) o;
         return Objects.equals(this.idUtilisateur, entity.idUtilisateur) &&
                 Objects.equals(this.idParc, entity.idParc);
     }
