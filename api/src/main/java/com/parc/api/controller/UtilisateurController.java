@@ -1,13 +1,7 @@
 package com.parc.api.controller;
 
-import com.parc.api.model.dto.ParcDto;
-import com.parc.api.model.dto.TypeImageDto;
 import com.parc.api.model.dto.UtilisateurDto;
-import com.parc.api.model.entity.Parc;
-import com.parc.api.model.entity.TypeImage;
 import com.parc.api.model.entity.Utilisateur;
-import com.parc.api.model.mapper.ParcMapper;
-import com.parc.api.model.mapper.TypeImageMapper;
 import com.parc.api.model.mapper.UtilisateurMapper;
 import com.parc.api.repository.UtilisateurRepository;
 import io.swagger.v3.oas.annotations.Operation;
