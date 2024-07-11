@@ -4,7 +4,7 @@ import com.parc.api.model.dto.UtilisateurDto;
 import com.parc.api.model.entity.Utilisateur;
 
 public class UtilisateurMapper {
-    public UtilisateurDto toDto(Utilisateur utilisateur) {
+    public static UtilisateurDto toDto(Utilisateur utilisateur) {
         UtilisateurDto utilisateurDto = new UtilisateurDto();
         utilisateurDto.setId(utilisateur.getId());
         utilisateurDto.setPseudo(utilisateur.getPseudo());
@@ -16,7 +16,7 @@ public class UtilisateurMapper {
         utilisateurDto.setIsActive(utilisateur.getIsActive());
         return utilisateurDto;
     }
-    public Utilisateur toEntity(UtilisateurDto utilisateurDto) {
+    public static Utilisateur toEntity(UtilisateurDto utilisateurDto) {
         Utilisateur utilisateur = new Utilisateur();
         utilisateur.setId(utilisateurDto.getId());
         utilisateur.setPseudo(utilisateurDto.getPseudo());
