@@ -10,7 +10,7 @@ public class TypeParcMapper {
         typeParcDto.setLibelleTypeParc(type.getLibelleTypeParc());
         return typeParcDto;
     }
-    public TypeParc fromDto(TypeParcDto typeParcDto) {
+    public static TypeParc toEntity(TypeParcDto typeParcDto) {
         TypeParc typeParc = new TypeParc();
         typeParc.setId(typeParcDto.getIdTypeImage());
         typeParc.setLibelleTypeParc(typeParcDto.getLibelleTypeParc());

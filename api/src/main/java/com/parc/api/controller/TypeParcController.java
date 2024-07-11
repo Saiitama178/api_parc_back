@@ -8,11 +8,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +43,39 @@ public class TypeParcController {
         if (typeParc.isPresent()) {
             TypeParcDto typeParcDto = TypeParcMapper.toDto(typeParc.get());
             return ResponseEntity.ok(typeParcDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/typeParc")
+    public ResponseEntity<TypeParcDto> createTypeImage(@RequestBody TypeParcDto typeParcDto) {
+        TypeParc typeParc = TypeParcMapper.toEntity(typeParcDto);
+        TypeParc savedTypeParc = typeParcRepository.save(typeParc);
+        TypeParcDto savedTypeParcDto = TypeParcMapper.toDto(savedTypeParc);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedTypeParcDto);
+    }
+
+    @DeleteMapping("/typeParc/{id}")
+    public ResponseEntity<Void> deleteTypeImage(@PathVariable Integer id) {
+        Optional<TypeParc> typeParcOptional = typeParcRepository.findById(id);
+        if (typeParcOptional.isPresent()) {
+            typeParcRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/typeParc/{id}")
+    public ResponseEntity<TypeParcDto> updateTypeImage(@PathVariable Integer id, @RequestBody TypeParcDto typeParcDto) {
+        Optional<TypeParc> foundTypeParcOptional = typeParcRepository.findById(id);
+        if (foundTypeParcOptional.isPresent()) {
+            TypeParc foundTypeParc = foundTypeParcOptional.get();
+            foundTypeParc.setLibelleTypeParc(typeParcDto.getLibelleTypeParc());
+            TypeParc savedTypeParc = typeParcRepository.save(foundTypeParc);
+            TypeParcDto updatedTypeParcDto = TypeParcMapper.toDto(savedTypeParc);
+            return ResponseEntity.ok(updatedTypeParcDto);
         } else {
             return ResponseEntity.notFound().build();
         }

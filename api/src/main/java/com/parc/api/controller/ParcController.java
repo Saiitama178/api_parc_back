@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -43,16 +44,7 @@ public class ParcController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/parc/{id}")
-    public ResponseEntity<ParcDto> getParcById(@PathVariable Integer id) {
-        Optional<Parc> pays = parcRepository.findById(id);
-        if (pays.isPresent()) {
-            ParcDto paysDto = ParcMapper.toDto(pays.get());
-            return ResponseEntity.ok(paysDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+
 
     @PostMapping("/parc")
     public ResponseEntity<ParcDto> createParc(@RequestBody ParcDto payDto) {
@@ -62,7 +54,7 @@ public class ParcController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPayDto);
     }
 
-    @DeleteMapping("/parc/{id}")
+    @DeleteMapping("/parc/sup/{id}")
     public ResponseEntity<Void> deleteParc(@PathVariable Integer id) {
         Optional<Parc> paysOptional = parcRepository.findById(id);
         if (paysOptional.isPresent()) {
