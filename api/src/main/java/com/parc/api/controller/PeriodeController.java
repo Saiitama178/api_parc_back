@@ -30,6 +30,17 @@ public class PeriodeController {
         return ResponseEntity.ok(periodeDtoList);
     }
 
+    @GetMapping("/periode/{id}")
+    public ResponseEntity<PeriodeDto> getPeriodeById(@PathVariable int id) {
+        Optional<Periode> periode = periodeRepository.findById(id);
+        if (periode.isPresent()) {
+            PeriodeDto periodeDto = PeriodeMapper.toDto(periode.get());
+            return ResponseEntity.ok(periodeDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("/periode/{id}")
     public ResponseEntity<PeriodeDto> createPeriodeByParc(@RequestBody PeriodeDto periodeDto, @PathVariable("id") int idParc) throws Exception {
         Parc parc = parcRepository.findById(idParc)
