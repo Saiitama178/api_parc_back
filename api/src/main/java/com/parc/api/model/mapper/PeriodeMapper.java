@@ -1,6 +1,7 @@
 package com.parc.api.model.mapper;
 
 import com.parc.api.model.dto.PeriodeDto;
+import com.parc.api.model.entity.Parc;
 import com.parc.api.model.entity.Periode;
 
 public class PeriodeMapper {
@@ -17,7 +18,7 @@ public class PeriodeMapper {
         return periodeDto;
     }
 
-    public static Periode toEntity(PeriodeDto periodeDto) {
+    public static Periode toEntity(PeriodeDto periodeDto, Parc parc) {
         Periode periode = new Periode();
         periode.setId(periodeDto.getIdPeriode());
         periode.setDateOuverture(periodeDto.getDateOuverturePeriode());
@@ -26,6 +27,7 @@ public class PeriodeMapper {
         periode.setHeureFermeture(periodeDto.getHeureFermeturePeriode());
         periode.setPrixAdulte(periodeDto.getPrixAdultePeriode());
         periode.setPrixEnfant(periodeDto.getPrixEnfantPeriode());
+        periode.setIdParc(parc);
         return periode;
     }
 }
