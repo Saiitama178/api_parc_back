@@ -1,8 +1,9 @@
 package com.parc.api.model.mapper;
 
-
 import com.parc.api.model.dto.ParcDto;
 import com.parc.api.model.entity.Parc;
+import com.parc.api.model.entity.Parking;
+import com.parc.api.model.entity.Ville;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
@@ -27,7 +28,7 @@ public class ParcMapper {
         return parcDto;
     }
 
-    public static Parc toEntity(ParcDto parcDto) {
+    public static Parc toEntity(ParcDto parcDto, Parking parking, Ville ville) {
         Parc parc = new Parc();
         parc.setId(parcDto.getId());
         parc.setNomParc(parcDto.getNomParc());
@@ -42,6 +43,8 @@ public class ParcMapper {
         parc.setIsSejour(parcDto.getIsSejour());
         parc.setIsTransportCommun(parcDto.getIsTransportCommun());
         parc.setUrlAffilation(parcDto.getUrlAffilation());
+        parc.setIdParking(parking);
+        parc.setIdVille(ville);
         return parc;
     }
 }
