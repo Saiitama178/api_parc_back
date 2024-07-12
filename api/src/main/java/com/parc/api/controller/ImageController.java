@@ -10,9 +10,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -29,5 +31,16 @@ public class ImageController {
         List<ImageDto> imageDtoList = imageList.stream()
                 .map(ImageMapper::toDto).toList();
         return ResponseEntity.ok(imageDtoList);
+    }
+
+    @GetMapping("/image/{id}")
+    public ResponseEntity<ImageDto> getImageById(@PathVariable int id) {
+        Optional<Image> imageOptional = imageRepository.findById(id);
+        if (imageOptional.isPresent()) {
+            ImageDto imageDto = ImageMapper.toDto(imageOptional.get());
+            return ResponseEntity.ok(imageDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
