@@ -55,4 +55,29 @@ public class ImageController {
         ImageDto savedImageDto = ImageMapper.toDto(savedImage);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedImageDto);
     }
+
+    @PutMapping("/image/{id}")
+    public ResponseEntity<ImageDto> updateImage(@PathVariable int id, @RequestBody ImageDto imageDto) {
+        Optional<Image> foundImageOptional = imageRepository.findById(id);
+        if (foundImageOptional.isPresent()) {
+            Image foundImage = foundImageOptional.get();
+            foundImage.setRefImage(imageDto.getRefImage());
+            Image savedImage = imageRepository.save(foundImage);
+            ImageDto updatedImageDto = ImageMapper.toDto(savedImage);
+            return ResponseEntity.ok(updatedImageDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/image/{id}")
+    public ResponseEntity<ImageDto> deleteImage(@PathVariable int id) {
+        Optional<Image> ImageOptional = imageRepository.findById(id);
+        if (ImageOptional.isPresent()) {
+            imageRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
