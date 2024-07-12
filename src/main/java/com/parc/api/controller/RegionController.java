@@ -21,16 +21,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api")
 public class RegionController {
     private final RegionRepository regionRepository;
-    @CrossOrigin(origins = "http//localhost:3308")
+    //@CrossOrigin(origins = "http//localhost:3308")
     @GetMapping("/region")
     public ResponseEntity<List<RegionDto>> getAllRegions() {
         List<Region> regions = regionRepository.findAll();
         List<RegionDto> regionDto = regions.stream()
-                .map(RegionMapper::toDto)
-                .collect(Collectors.toList());
+                .map(RegionMapper::toDto).toList();
         return ResponseEntity.ok(regionDto);
     }
     //@CrossOrigin(origins = "http:localhost:3308")
@@ -49,21 +47,16 @@ public class RegionController {
     //chatGpt
     @Autowired
     private PaysRepository paysRepository;
-    @PostMapping("/region")
-    public ResponseEntity<Region> createRegion(@RequestBody Region region) {
-        if (region.getIdPays() == null || region.getIdPays().getId() == null) {
-            return ResponseEntity.badRequest().body(null);
-        }
-
-        Optional<Pays> pays = paysRepository.findById(region.getIdPays().getId());
-        if (!pays.isPresent()) {
-            return ResponseEntity.badRequest().body(null);
-        }
-
-        region.setIdPays(pays.get());
+    @PostMapping("/region/{idPays}")
+    public ResponseEntity<RegionDto> createRegionByPays(@RequestBody RegionDto regionDto, @PathVariable("idPays") int idPays) throws Exception  {
+        Pays pays = paysRepository.findById(idPays)
+        .orElseThrow(()-> new Exception("Erreur"));
+        Region region = RegionMapper.toEntity(regionDto, pays);
         Region savedRegion = regionRepository.save(region);
-        return ResponseEntity.ok(savedRegion);
+        RegionDto savedRegionDto = RegionMapper.toDto(savedRegion);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedRegionDto);
     }
+
     /*request payload region :
     * {
   "nomRegion": "New Region",

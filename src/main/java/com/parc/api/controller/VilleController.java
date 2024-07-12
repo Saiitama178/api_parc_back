@@ -1,10 +1,13 @@
 package com.parc.api.controller;
 
 import com.parc.api.model.dto.VilleDto;
+import com.parc.api.model.entity.Region;
 import com.parc.api.model.entity.Ville;
 import com.parc.api.model.mapper.VilleMapper;
+import com.parc.api.repository.RegionRepository;
 import com.parc.api.repository.VilleRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +18,11 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api")
+//@RequestMapping("/api")
 public class VilleController {
     private final VilleRepository villeRepository;
-    @CrossOrigin(origins = "http//localhost:3306")
+    private final RegionRepository regionRepository;;
+    //@CrossOrigin(origins = "http//localhost:3306")
     @GetMapping("/ville")
     public ResponseEntity<List<VilleDto>> getAllVilles() {
         List<Ville> villes = villeRepository.findAll();
@@ -63,32 +67,20 @@ public class VilleController {
             return ResponseEntity.notFound().build();
         }
     }
-    //@Autowired
+    @Autowired
 
-    @CrossOrigin(origins = "http://localhost:3306")
-    @PostMapping("/ville")
-    public ResponseEntity<VilleDto> createVille(@RequestBody VilleDto villeDto) {
-        if (villeDto == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        Ville ville = VilleMapper.toEntity(villeDto);
+    //@CrossOrigin(origins = "http://localhost:3306")
+    @PostMapping("/ville/{idRegion}")
+    public ResponseEntity<VilleDto> createVillebyRegion(@RequestBody VilleDto villeDto,@PathVariable("idRegion") int IdRegion) throws Exception{
+        Region region  = regionRepository.findById(IdRegion)
+                .orElseThrow(()-> new Exception("Erreur"));
+
+        Ville ville = VilleMapper.toEntity(villeDto, region);
         Ville savedVille = villeRepository.save(ville);
         VilleDto savedVilleDto = VilleMapper.toDto(savedVille);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedVilleDto);
         }
-        /*
-        * requesy payload :
-        * {
-  "nomVille": "New York",
-  "codePostal": "10001",
-  "idRegion": {
-    "id": 1,
-    "idPays": {
-      "id":1
-    }
-  }
-}
-        * */
+
     }
 
 
