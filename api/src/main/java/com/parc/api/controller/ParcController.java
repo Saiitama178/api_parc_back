@@ -2,8 +2,12 @@ package com.parc.api.controller;
 
 import com.parc.api.model.dto.ParcDto;
 import com.parc.api.model.entity.Parc;
+import com.parc.api.model.entity.Parking;
+import com.parc.api.model.entity.Ville;
 import com.parc.api.model.mapper.ParcMapper;
 import com.parc.api.repository.ParcRepository;
+import com.parc.api.repository.ParkingRepository;
+import com.parc.api.repository.VilleRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
@@ -21,6 +25,9 @@ import java.util.Optional;
 public class ParcController {
 
     private final ParcRepository parcRepository;
+    private final ParkingRepository parkingRepository;
+    private final VilleRepository villeRepository;
+
 
 
     @CrossOrigin(origins = "http://localhost:3000")
@@ -45,12 +52,16 @@ public class ParcController {
 
 
 
-    @PostMapping("/parc")
-    public ResponseEntity<ParcDto> createParc(@RequestBody ParcDto payDto) {
-        Parc pays = ParcMapper.toEntity(payDto);
-        Parc savedPays = parcRepository.save(pays);
-        ParcDto savedPayDto = ParcMapper.toDto(savedPays);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedPayDto);
+    @PostMapping("/parc/{idParking}/{idVille}")
+    public ResponseEntity<ParcDto> createParc(@RequestBody ParcDto parcDto,@PathVariable("idParking") int idParking, @PathVariable("idVille") int idVille) throws Exception {
+        Parking parking = parkingRepository.findById(idParking)
+                .orElseThrow(()-> new Exception("erreur"));
+        Ville ville = villeRepository.findById(idVille)
+                .orElseThrow(()-> new Exception("erreur"));
+        Parc parc = ParcMapper.toEntity(parcDto, parking, ville);
+        Parc savedParc = parcRepository.save(parc);
+        ParcDto savedParcDto = ParcMapper.toDto(savedParc);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedParcDto);
     }
 
     @DeleteMapping("/parc/sup/{id}")

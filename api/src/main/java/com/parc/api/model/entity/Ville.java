@@ -17,7 +17,7 @@ public class Ville {
     @Column(name = "nom_ville", nullable = false, length = 50)
     private String nomVille;
 
-    @Column(name = "code_porsatal", nullable = false, length = 5)
+    @Column(name = "code_postal", nullable = false, length = 5)
     private String codePostal;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

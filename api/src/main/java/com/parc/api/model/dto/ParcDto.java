@@ -1,5 +1,6 @@
 package com.parc.api.model.dto;
 
+import com.parc.api.model.entity.Parc;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,5 +22,8 @@ public class ParcDto {
     private Boolean isSejour = false;
     private Boolean isTransportCommun = false;
     private String urlAffilation;
+    private int parking;
+
+
 }
 
