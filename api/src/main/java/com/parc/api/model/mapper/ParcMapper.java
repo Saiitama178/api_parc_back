@@ -9,7 +9,6 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public class ParcMapper {
 
-
     public static ParcDto toDto(Parc parc) {
         ParcDto parcDto = new ParcDto();
         parcDto.setId(parc.getId());
