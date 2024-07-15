@@ -22,7 +22,6 @@ public class ReseauxSociauxController {
 
     private final ReseauxSociauxRepository reseauxSociauxRepository;
 
-    //@CrossOrigin(origins = "http//localhost:3308")
     @GetMapping("/reseauxsociaux")
     public ResponseEntity<List<ReseauxSociauxDto>> getAllReseauxSociaux() {
         List<ReseauxSociaux> reseauxSociaux = reseauxSociauxRepository.findAll();
@@ -55,7 +54,6 @@ public class ReseauxSociauxController {
             return ResponseEntity.notFound().build();
         }
     }
-    //@CrossOrigin(origins = "http://localhost:3308")
     @PostMapping("/reseauxsociaux")
     public ResponseEntity<ReseauxSociauxDto> createReseauxSociaux(@RequestBody ReseauxSociauxDto newReseauxSociauxDto) {
         ReseauxSociaux newReseauxSociaux = ReseauxSociauxMapper.toEntity(newReseauxSociauxDto);
@@ -63,11 +61,7 @@ public class ReseauxSociauxController {
         ReseauxSociauxDto savedReseauxSociauxDto = ReseauxSociauxMapper.toDto(savedReseauxSociaux);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReseauxSociauxDto);
     }
-    /*request pqyload :
-    * 	{
-	"libReseauxSociaux": "QQ",
-	"iconReseauxSociaux": []
-	}*/
+
     @PutMapping("/reseauxsociaux/{id}")
     public ResponseEntity<ReseauxSociauxDto> updateReseauxSociaux(@PathVariable Integer id,
                                                                   @RequestBody ReseauxSociauxDto reseauxSociauxDto) {
@@ -83,11 +77,5 @@ public class ReseauxSociauxController {
             return ResponseEntity.notFound().build();
         }
     }
-    /*request payload Insomnia:
-    * 	{
-	"libReseauxSociaux": "Bedoo",
-	"iconReseauxSociaux": []
-	}*/
-
 }
 

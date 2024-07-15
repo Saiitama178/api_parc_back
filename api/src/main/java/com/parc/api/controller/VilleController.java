@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class VilleController {
     private final VilleRepository villeRepository;
     private final RegionRepository regionRepository;;
-    //@CrossOrigin(origins = "http//localhost:3306")
+
     @GetMapping("/ville")
     public ResponseEntity<List<VilleDto>> getAllVilles() {
         List<Ville> villes = villeRepository.findAll();
@@ -31,7 +31,7 @@ public class VilleController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(villeDto);
     }
-    @CrossOrigin(origins = "http://localhost:3306")
+
     @GetMapping("/ville/{id}")
     public ResponseEntity<VilleDto> getVilleById(@PathVariable Integer id) {
         Optional<Ville> ville = villeRepository.findById(id);
@@ -43,7 +43,6 @@ public class VilleController {
         }}
 
     @DeleteMapping("/ville/{id}")
-//Interger Long
     public ResponseEntity<Void> deleteVille(@PathVariable Integer id) {
         Optional<Ville> villeOptional = villeRepository.findById(id);
         if (villeOptional.isPresent()) {
@@ -60,6 +59,7 @@ public class VilleController {
         if (foundVilleOptional.isPresent()) {
             Ville foundVille= foundVilleOptional.get();
             foundVille.setNomVille(villeDto.getNomVille());
+            foundVille.setCodePostal(villeDto.getCodePostal());
             Ville savedVille= villeRepository.save(foundVille);
             VilleDto updatedVilleDto = VilleMapper.toDto(savedVille);
             return ResponseEntity.ok(updatedVilleDto);
@@ -67,14 +67,11 @@ public class VilleController {
             return ResponseEntity.notFound().build();
         }
     }
-    @Autowired
 
-    //@CrossOrigin(origins = "http://localhost:3306")
     @PostMapping("/ville/{idRegion}")
-    public ResponseEntity<VilleDto> createVillebyRegion(@RequestBody VilleDto villeDto,@PathVariable("idRegion") int IdRegion) throws Exception{
-        Region region  = regionRepository.findById(IdRegion)
+    public ResponseEntity<VilleDto> createVillebyRegion(@RequestBody VilleDto villeDto,@PathVariable("idRegion") int idRegion) throws Exception{
+        Region region  = regionRepository.findById(idRegion)
                 .orElseThrow(()-> new Exception("Erreur"));
-
         Ville ville = VilleMapper.toEntity(villeDto, region);
         Ville savedVille = villeRepository.save(ville);
         VilleDto savedVilleDto = VilleMapper.toDto(savedVille);

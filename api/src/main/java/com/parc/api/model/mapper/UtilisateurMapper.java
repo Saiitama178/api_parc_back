@@ -11,7 +11,7 @@ public class UtilisateurMapper {
         utilisateurDto.setEmail(utilisateur.getEmail());
         utilisateurDto.setMdp(utilisateur.getMdp());
         utilisateurDto.setDateCreation(utilisateur.getDateCreation());
-        utilisateurDto.setRole(utilisateur.getRole());
+        utilisateurDto.setRole(Boolean.valueOf(utilisateur.getRole()));
         utilisateurDto.setToken(utilisateur.getToken());
         utilisateurDto.setIsActive(utilisateur.getIsActive());
         return utilisateurDto;
@@ -23,7 +23,7 @@ public class UtilisateurMapper {
         utilisateur.setEmail(utilisateurDto.getEmail());
         utilisateur.setMdp(utilisateurDto.getMdp());
         utilisateur.setDateCreation(utilisateurDto.getDateCreation());
-        utilisateur.setRole(utilisateurDto.getRole());
+        utilisateur.setRole(String.valueOf(utilisateurDto.getRole()));
         utilisateur.setToken(utilisateurDto.getToken());
         utilisateur.setIsActive(utilisateurDto.getIsActive());
         return utilisateur;

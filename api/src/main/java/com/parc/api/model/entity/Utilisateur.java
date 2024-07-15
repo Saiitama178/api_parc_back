@@ -29,7 +29,7 @@ public class Utilisateur {
     private LocalDate dateCreation;
 
     @Column(name = "role", nullable = false)
-    private Boolean role = false;
+    private String role;
 
     @Column(name = "token", nullable = false, length = 250)
     private String token;

@@ -22,8 +22,5 @@ public class ParcDto {
     private Boolean isSejour = false;
     private Boolean isTransportCommun = false;
     private String urlAffilation;
-    private int parking;
-
-
 }
 

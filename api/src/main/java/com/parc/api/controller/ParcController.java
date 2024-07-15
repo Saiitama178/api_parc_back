@@ -66,8 +66,8 @@ public class ParcController {
 
     @DeleteMapping("/parc/{id}")
     public ResponseEntity<Void> deleteParc(@PathVariable Integer id) {
-        Optional<Parc> paysOptional = parcRepository.findById(id);
-        if (paysOptional.isPresent()) {
+        Optional<Parc> parcOptional = parcRepository.findById(id);
+        if (parcOptional.isPresent()) {
             parcRepository.deleteById(id);
             return ResponseEntity.noContent().build();
         } else {
@@ -75,7 +75,7 @@ public class ParcController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/parc/{id}")
     public ResponseEntity<ParcDto> updateParc(@PathVariable Integer id, @RequestBody ParcDto parcDto) {
         // Rechercher le parc par son ID
         Optional<Parc> existingParc = parcRepository.findById(id);
