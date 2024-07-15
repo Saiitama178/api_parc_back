@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public class PossederDto {
     private String urlReseauSociaux;
     private int idReseauSociaux;
-    private int idParc;
 }

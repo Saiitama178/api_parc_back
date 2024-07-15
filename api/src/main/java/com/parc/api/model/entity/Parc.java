@@ -1,13 +1,17 @@
 package com.parc.api.model.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "parc")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Parc {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,12 +55,12 @@ public class Parc {
     @Column(name = "url_affilation", length = 250)
     private String urlAffilation;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_ville", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_ville")
     private Ville idVille;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_parking", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_parking")
     private Parking idParking;
 
 }

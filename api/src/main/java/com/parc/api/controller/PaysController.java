@@ -37,7 +37,6 @@ public class PaysController {
         } else {
             return ResponseEntity.notFound().build();
         }
-        //@CrossOrigin(origins = "http:localhost:3308")
         }
     @PostMapping("/pays")
     public ResponseEntity<PaysDto> createPay(@RequestBody PaysDto payDto) {
@@ -47,7 +46,6 @@ public class PaysController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPayDto);
     }
     @DeleteMapping("/pays/{id}")
-    //Interger Long
     public ResponseEntity<Void> deletePay(@PathVariable Integer id) {
         Optional<Pays> paysOptional = paysRepository.findById(id);
         if (paysOptional.isPresent()) {
