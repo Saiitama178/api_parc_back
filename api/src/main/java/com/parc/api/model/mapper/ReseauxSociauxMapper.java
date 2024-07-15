@@ -7,16 +7,16 @@ public class ReseauxSociauxMapper {
     public static ReseauxSociauxDto toDto(ReseauxSociaux reseauxSociaux) {
         ReseauxSociauxDto reseauxSociauxDto = new ReseauxSociauxDto();
         reseauxSociauxDto.setId(reseauxSociaux.getId());
-        reseauxSociauxDto.setLibReseauxSociaux(reseauxSociaux.getLibReseauxSociaux());
-        reseauxSociauxDto.setIconReseauxSociaux(reseauxSociaux.getIconReseauxSociaux());
+        reseauxSociauxDto.setLibReseauxSociaux(reseauxSociaux.getLibReseauSociaux());
+        reseauxSociauxDto.setIconReseauxSociaux(reseauxSociaux.getIconReseauSociaux());
         return reseauxSociauxDto;
     }
 
     public static ReseauxSociaux toEntity(ReseauxSociauxDto reseauxSociauxDto) {
         ReseauxSociaux reseauxSociaux = new ReseauxSociaux();
         reseauxSociaux.setId(reseauxSociauxDto.getId());
-        reseauxSociaux.setLibReseauxSociaux(reseauxSociauxDto.getLibReseauxSociaux());
-        reseauxSociaux.setIconReseauxSociaux(reseauxSociauxDto.getIconReseauxSociaux());
+        reseauxSociaux.setLibReseauSociaux(reseauxSociauxDto.getLibReseauxSociaux());
+        reseauxSociaux.setIconReseauSociaux(reseauxSociauxDto.getIconReseauxSociaux());
         return reseauxSociaux;
     }
 }

@@ -74,8 +74,8 @@ public class ReseauxSociauxController {
         Optional<ReseauxSociaux> reseauxSociauxOptional = reseauxSociauxRepository.findById(id);
         if (reseauxSociauxOptional.isPresent()) {
             ReseauxSociaux existingReseauxSociaux = reseauxSociauxOptional.get();
-            existingReseauxSociaux.setLibReseauxSociaux(reseauxSociauxDto.getLibReseauxSociaux());
-            existingReseauxSociaux.setIconReseauxSociaux(reseauxSociauxDto.getIconReseauxSociaux());
+            existingReseauxSociaux.setLibReseauSociaux(reseauxSociauxDto.getLibReseauxSociaux());
+            existingReseauxSociaux.setIconReseauSociaux(reseauxSociauxDto.getIconReseauxSociaux());
             ReseauxSociaux updatedReseauxSociaux = reseauxSociauxRepository.save(existingReseauxSociaux);
             ReseauxSociauxDto updatedReseauxSociauxDto = ReseauxSociauxMapper.toDto(updatedReseauxSociaux);
             return ResponseEntity.ok(updatedReseauxSociauxDto);
