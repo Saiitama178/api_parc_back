@@ -67,7 +67,6 @@ public class VilleController {
             return ResponseEntity.notFound().build();
         }
     }
-    @Autowired
 
     //@CrossOrigin(origins = "http://localhost:3306")
     @PostMapping("/ville/{idRegion}")

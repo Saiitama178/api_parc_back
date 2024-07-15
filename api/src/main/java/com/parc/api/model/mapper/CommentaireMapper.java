@@ -3,6 +3,8 @@ package com.parc.api.model.mapper;
 
 import com.parc.api.model.dto.CommentaireDto;
 import com.parc.api.model.entity.Commentaire;
+import com.parc.api.model.entity.Parc;
+import com.parc.api.model.entity.Utilisateur;
 
 public class CommentaireMapper  {
     public static CommentaireDto toDto(Commentaire commentaire) {
@@ -12,11 +14,13 @@ public class CommentaireMapper  {
         commentaireDto.setNoteParc(commentaire.getNote());
         return commentaireDto;
     }
-    public Commentaire toEntity(CommentaireDto commentaireDto) {
+    public static Commentaire toEntity(CommentaireDto commentaireDto, Utilisateur utilisateur, Parc parc) {
         Commentaire commentaire = new Commentaire();
         commentaire.setId(commentaireDto.getIdCommentaire());
         commentaire.setTextCommentaire(commentaireDto.getContenuCommentaire());
         commentaire.setNote(commentaireDto.getNoteParc());
+        commentaire.setIdUtilisateur(utilisateur);
+        commentaire.setIdParc(parc);
         return commentaire;
     }
 

@@ -3,9 +3,11 @@ package com.parc.api.model.dto;
 
 
 import com.parc.api.model.entity.ClasserId;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+
+@Getter
+@Setter
 
 @Data
 @NoArgsConstructor
