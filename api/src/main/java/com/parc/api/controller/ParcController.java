@@ -64,7 +64,7 @@ public class ParcController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedParcDto);
     }
 
-    @DeleteMapping("/parc/sup/{id}")
+    @DeleteMapping("/parc/{id}")
     public ResponseEntity<Void> deleteParc(@PathVariable Integer id) {
         Optional<Parc> paysOptional = parcRepository.findById(id);
         if (paysOptional.isPresent()) {
