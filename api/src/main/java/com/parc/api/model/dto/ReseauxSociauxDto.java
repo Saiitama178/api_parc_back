@@ -11,4 +11,5 @@ public class ReseauxSociauxDto {
     private Integer id;
     private String libReseauxSociaux;
     private byte[] iconReseauxSociaux;
+
 }

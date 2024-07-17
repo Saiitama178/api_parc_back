@@ -1,10 +1,8 @@
 package com.parc.api.controller;
 
 import com.parc.api.model.dto.ClasserDto;
-
 import com.parc.api.model.entity.*;
 import com.parc.api.model.mapper.ClasserMapper;
-
 import com.parc.api.repository.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,36 +13,23 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 
 @RestController
 @AllArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 public class ClasserController {
 
-
-
     private final ClasserRepository classerRepository;
-    private final ParcRepository parcRepository;
-    private final ReseauxSociauxRepository TypeParcRepository;
-    private final com.parc.api.repository.TypeParcRepository typeParcRepository;
 
     @GetMapping("/classer")
     @Operation(summary = "Affiche la liste de la table classer", description = "Retourne une liste de la table classer",
-    responses = {
-        @ApiResponse(responseCode = "200", description = " Liste classer")
-    })
+            responses = {
+                    @ApiResponse(responseCode = "200", description = " Liste classer")
+            })
     public ResponseEntity<List<ClasserDto>> getAllClasser() {
-
-
-        // Récupérer tous les parcs de la base de données
         List<Classer> classerList = classerRepository.findAll();
-        // Convertir la liste des entités Parc en liste de DTOs ParcDto
         List<ClasserDto> classerDtos = classerList.stream()
-                .map(ClasserMapper::toDto)
-                .collect(Collectors.toList());
-        // Retourner la réponse HTTP avec la liste des ParcDto
+                .map(ClasserMapper::toDto).toList();
         return ResponseEntity.ok(classerDtos);
     }
 
@@ -59,16 +44,15 @@ public class ClasserController {
         }
     }
 
-    @PostMapping("/classer/{idParc}/{idTypeParc}")
-    public ResponseEntity<ClasserDto> createClasser(@RequestBody ClasserDto classerDto,@PathVariable("idParc") int idParc,@PathVariable("idTypeParc") int idTypeParc) throws Exception {
-        Parc parc = parcRepository.findById(idParc)
-                .orElseThrow(()-> new Exception("erreur"));
-        TypeParc typeParc = typeParcRepository.findById(idTypeParc)
-                .orElseThrow(()-> new Exception("erreur"));
-        Classer classer = ClasserMapper.toEntity(classerDto, parc, typeParc);
+    @PostMapping("/classer")
+    public ResponseEntity<ClasserDto> createClasser(@RequestBody ClasserDto classerDto) {
+        if (classerDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Classer classer = ClasserMapper.toEntity(classerDto);
         Classer savedClasser = classerRepository.save(classer);
         ClasserDto savedClasserDto = ClasserMapper.toDto(savedClasser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedClasserDto);
+        return new ResponseEntity<>(savedClasserDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/classer/{id}")
@@ -83,7 +67,7 @@ public class ClasserController {
     }
 
     @PutMapping("/classer/{id}")
-    public ResponseEntity<ClasserDto> updateClasser(@PathVariable Integer id, @RequestBody ClasserDto classerDto) {
+    public ResponseEntity<ClasserDto> updateClasser(@PathVariable Integer id) {
         Optional<Classer> existingClasser = classerRepository.findById(id);
         if (existingClasser.isPresent()) {
             Classer classer = existingClasser.get();
@@ -94,4 +78,3 @@ public class ClasserController {
         }
     }
 }
-

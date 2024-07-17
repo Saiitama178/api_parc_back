@@ -2,12 +2,8 @@ package com.parc.api.controller;
 
 import com.parc.api.model.dto.ImageDto;
 import com.parc.api.model.entity.Image;
-import com.parc.api.model.entity.Parc;
-import com.parc.api.model.entity.TypeImage;
 import com.parc.api.model.mapper.ImageMapper;
 import com.parc.api.repository.ImageRepository;
-import com.parc.api.repository.ParcRepository;
-import com.parc.api.repository.TypeImageRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +18,6 @@ import java.util.Optional;
 public class ImageController {
 
     private ImageRepository imageRepository;
-    private final ParcRepository parcRepository;
-    private final TypeImageRepository typeImageRepository;
 
     @GetMapping("/image")
     public ResponseEntity<List<ImageDto>> getAllImages() {
@@ -44,16 +38,15 @@ public class ImageController {
         }
     }
 
-    @PostMapping("/image/{idTypeImage}/{idParc}")
+    @PostMapping("/image")
     public ResponseEntity<ImageDto> createImage(@RequestBody ImageDto imageDto, @PathVariable("idTypeImage") int idTypeImage, @PathVariable("idParc") int idParc) throws Exception {
-        TypeImage typeImage = typeImageRepository.findById(idTypeImage)
-                .orElseThrow(()-> new Exception("erreur"));
-        Parc parc = parcRepository.findById(idParc)
-                .orElseThrow(()-> new Exception("erreur"));
-        Image image = ImageMapper.toEntity(imageDto, typeImage, parc);
+        if (imageDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Image image = ImageMapper.toEntity(imageDto);
         Image savedImage = imageRepository.save(image);
         ImageDto savedImageDto = ImageMapper.toDto(savedImage);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedImageDto);
+        return new ResponseEntity<>(savedImageDto, HttpStatus.CREATED);
     }
 
     @PutMapping("/image/{id}")

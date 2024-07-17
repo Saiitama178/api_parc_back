@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class RegionDto {
     private int idRegion;
     private String nomRegion;
-
+    private PaysDto idPays;
 }

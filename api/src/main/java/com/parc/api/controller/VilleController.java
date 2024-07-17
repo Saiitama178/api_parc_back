@@ -1,13 +1,10 @@
 package com.parc.api.controller;
 
 import com.parc.api.model.dto.VilleDto;
-import com.parc.api.model.entity.Region;
 import com.parc.api.model.entity.Ville;
 import com.parc.api.model.mapper.VilleMapper;
-import com.parc.api.repository.RegionRepository;
 import com.parc.api.repository.VilleRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +15,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-//@RequestMapping("/api")
 public class VilleController {
     private final VilleRepository villeRepository;
-    private final RegionRepository regionRepository;;
 
     @GetMapping("/ville")
     public ResponseEntity<List<VilleDto>> getAllVilles() {
@@ -52,7 +47,7 @@ public class VilleController {
             return ResponseEntity.notFound().build();
         }
     }
-    @CrossOrigin(origins = "http:localhost:3308")
+
     @PutMapping("/ville/{id}")
     public ResponseEntity<VilleDto> updateVille(@PathVariable Integer id, @RequestBody VilleDto villeDto) {
         Optional<Ville> foundVilleOptional = villeRepository.findById(id);
@@ -68,14 +63,15 @@ public class VilleController {
         }
     }
 
-    @PostMapping("/ville/{idRegion}")
-    public ResponseEntity<VilleDto> createVillebyRegion(@RequestBody VilleDto villeDto,@PathVariable("idRegion") int idRegion) throws Exception{
-        Region region  = regionRepository.findById(idRegion)
-                .orElseThrow(()-> new Exception("Erreur"));
-        Ville ville = VilleMapper.toEntity(villeDto, region);
+    @PostMapping("/ville")
+    public ResponseEntity<VilleDto> createVillebyRegion(@RequestBody VilleDto villeDto) {
+        if (villeDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Ville ville = VilleMapper.toEntity(villeDto);
         Ville savedVille = villeRepository.save(ville);
         VilleDto savedVilleDto = VilleMapper.toDto(savedVille);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedVilleDto);
+        return new ResponseEntity<>(savedVilleDto, HttpStatus.CREATED);
         }
 
     }

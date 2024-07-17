@@ -1,7 +1,6 @@
 package com.parc.api.controller;
 
 import com.parc.api.model.dto.PeriodeDto;
-import com.parc.api.model.entity.Parc;
 import com.parc.api.model.entity.Periode;
 import com.parc.api.model.mapper.PeriodeMapper;
 import com.parc.api.repository.ParcRepository;
@@ -20,7 +19,6 @@ import java.util.Optional;
 public class PeriodeController {
 
     private final PeriodeRepository periodeRepository;
-    private final ParcRepository parcRepository;
 
     @GetMapping("/periode")
     public ResponseEntity<List<PeriodeDto>> getAllPeriode() {
@@ -41,14 +39,15 @@ public class PeriodeController {
         }
     }
 
-    @PostMapping("/periode/{id}")
-    public ResponseEntity<PeriodeDto> createPeriodeByParc(@RequestBody PeriodeDto periodeDto, @PathVariable("id") int idParc) throws Exception {
-        Parc parc = parcRepository.findById(idParc)
-                .orElseThrow(()-> new Exception("erreur"));
-        Periode periode = PeriodeMapper.toEntity(periodeDto, parc);
+    @PostMapping("/periode")
+    public ResponseEntity<PeriodeDto> createPeriodeByParc(@RequestBody PeriodeDto periodeDto) {
+        if (periodeDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Periode periode = PeriodeMapper.toEntity(periodeDto);
         Periode savedPeriode = periodeRepository.save(periode);
         PeriodeDto savedPeriodeDto = PeriodeMapper.toDto(savedPeriode);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedPeriodeDto);
+        return new ResponseEntity<>(savedPeriodeDto, HttpStatus.CREATED);
     }
 
     @PutMapping("/periode/{id}")

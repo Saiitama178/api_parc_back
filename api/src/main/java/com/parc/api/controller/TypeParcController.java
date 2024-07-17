@@ -7,7 +7,6 @@ import com.parc.api.repository.TypeParcRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,10 +49,13 @@ public class TypeParcController {
 
     @PostMapping("/typeParc")
     public ResponseEntity<TypeParcDto> createTypeImage(@RequestBody TypeParcDto typeParcDto) {
+        if (typeParcDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         TypeParc typeParc = TypeParcMapper.toEntity(typeParcDto);
         TypeParc savedTypeParc = typeParcRepository.save(typeParc);
         TypeParcDto savedTypeParcDto = TypeParcMapper.toDto(savedTypeParc);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedTypeParcDto);
+        return new ResponseEntity<>(savedTypeParcDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/typeParc/{id}")

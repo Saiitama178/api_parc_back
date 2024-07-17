@@ -13,4 +13,7 @@ public class ImageDto {
 
     private Integer idImage;
     private String refImage;
+    private ParcDto idParc;
+    private TypeImageDto idTypeImage;
+
 }

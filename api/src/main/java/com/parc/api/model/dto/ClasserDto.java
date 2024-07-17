@@ -3,6 +3,7 @@ package com.parc.api.model.dto;
 
 
 import com.parc.api.model.entity.ClasserId;
+import com.parc.api.model.mapper.ParcMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,5 +14,7 @@ import lombok.NoArgsConstructor;
 public class ClasserDto {
 
     private ClasserId idClasser;
+    private ParcDto idParc;
+    private TypeParcDto idTypeParc;
 
 }

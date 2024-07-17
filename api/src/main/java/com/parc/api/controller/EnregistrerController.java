@@ -2,11 +2,8 @@ package com.parc.api.controller;
 
 
 import com.parc.api.model.dto.EnregistrerDto;
-
-import com.parc.api.model.entity.*;
 import com.parc.api.model.entity.Enregistrer;
 import com.parc.api.model.mapper.EnregistrerMapper;
-
 import com.parc.api.repository.EnregistrerRepository;
 import com.parc.api.repository.ParcRepository;
 import com.parc.api.repository.UtilisateurRepository;
@@ -17,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 
 @RestController
 @AllArgsConstructor
@@ -30,15 +25,10 @@ public class EnregistrerController {
 
     @GetMapping("/enregistrer")
     public ResponseEntity<List<EnregistrerDto>> getAllEnregistrer(){
-
         List<Enregistrer> enregistrerList = enregistrerRepository.findAll();
-
         List<EnregistrerDto> enregistrerDto = enregistrerList.stream()
-                .map(EnregistrerMapper::toDto)
-                .collect(Collectors.toList());
-
+                .map(EnregistrerMapper::toDto).toList();
         return ResponseEntity.ok(enregistrerDto);
-
     }
 
     @GetMapping("/enregistrer/{id}")
@@ -52,16 +42,15 @@ public class EnregistrerController {
         }
     }
 
-    @PostMapping("/enregistrer/{idParc}/{idUtilisateur}")
-    public ResponseEntity<EnregistrerDto> createEnregistrer(@RequestBody EnregistrerDto enregistrerDto,@PathVariable("idParc") int idParc,@PathVariable("idUtilisateur") int idUtilisateur) throws Exception {
-        Parc parc = parcRepository.findById(idParc)
-                .orElseThrow(()-> new Exception("erreur"));
-        Utilisateur utilisateur = utilisateurRepository.findById(idUtilisateur)
-                .orElseThrow(()-> new Exception("erreur"));
-        Enregistrer enregistrer = EnregistrerMapper.toEntity(enregistrerDto, parc, utilisateur);
+    @PostMapping("/enregistrer")
+    public ResponseEntity<EnregistrerDto> createEnregistrer(@RequestBody EnregistrerDto enregistrerDto) {
+        if (enregistrerDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Enregistrer enregistrer = EnregistrerMapper.toEntity(enregistrerDto);
         Enregistrer savedEnregistrer = enregistrerRepository.save(enregistrer);
         EnregistrerDto savedEnregistrerDto = EnregistrerMapper.toDto(savedEnregistrer);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedEnregistrerDto);
+        return new ResponseEntity<>(savedEnregistrerDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/enregistrer/{id}")
@@ -80,7 +69,6 @@ public class EnregistrerController {
         Optional<Enregistrer> existingEnregistrer = enregistrerRepository.findById(id);
         if (existingEnregistrer.isPresent()) {
             Enregistrer enregistrer = existingEnregistrer.get();
-
             enregistrer = enregistrerRepository.save(enregistrer);
             return ResponseEntity.ok(EnregistrerMapper.toDto(enregistrer));
         } else {
@@ -88,5 +76,4 @@ public class EnregistrerController {
         }
     }
 }
-
 
