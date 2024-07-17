@@ -43,7 +43,6 @@ public class ReseauxSociauxController {
         }
     }
 
-
     @DeleteMapping("/reseauxsociaux/{id}")
     public ResponseEntity<Void> deleteReseauxSociaux(@PathVariable Integer id) {
         Optional<ReseauxSociaux> reseauxSociauxOptional = reseauxSociauxRepository.findById(id);
@@ -54,17 +53,20 @@ public class ReseauxSociauxController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @PostMapping("/reseauxsociaux")
     public ResponseEntity<ReseauxSociauxDto> createReseauxSociaux(@RequestBody ReseauxSociauxDto newReseauxSociauxDto) {
+        if (newReseauxSociauxDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         ReseauxSociaux newReseauxSociaux = ReseauxSociauxMapper.toEntity(newReseauxSociauxDto);
         ReseauxSociaux savedReseauxSociaux = reseauxSociauxRepository.save(newReseauxSociaux);
         ReseauxSociauxDto savedReseauxSociauxDto = ReseauxSociauxMapper.toDto(savedReseauxSociaux);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedReseauxSociauxDto);
+        return new ResponseEntity<>(savedReseauxSociauxDto, HttpStatus.CREATED);
     }
 
     @PutMapping("/reseauxsociaux/{id}")
-    public ResponseEntity<ReseauxSociauxDto> updateReseauxSociaux(@PathVariable Integer id,
-                                                                  @RequestBody ReseauxSociauxDto reseauxSociauxDto) {
+    public ResponseEntity<ReseauxSociauxDto> updateReseauxSociaux(@PathVariable Integer id, @RequestBody ReseauxSociauxDto reseauxSociauxDto) {
         Optional<ReseauxSociaux> reseauxSociauxOptional = reseauxSociauxRepository.findById(id);
         if (reseauxSociauxOptional.isPresent()) {
             ReseauxSociaux existingReseauxSociaux = reseauxSociauxOptional.get();

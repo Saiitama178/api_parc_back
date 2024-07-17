@@ -17,8 +17,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 
 public class PaysController {
+
     private final PaysRepository paysRepository;
-    @CrossOrigin(origins = "http//localhost:3308")
+
     @GetMapping("/pays")
     public ResponseEntity<List<PaysDto>> getAllPays() {
         List<Pays> pays = paysRepository.findAll();
@@ -27,7 +28,6 @@ public class PaysController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(paysDto);
     }
-    @CrossOrigin(origins = "http:localhost:3308")
     @GetMapping("/pays/{id}")
     public ResponseEntity<PaysDto> getPaysById(@PathVariable Integer id) {
         Optional<Pays> pays = paysRepository.findById(id);
@@ -39,11 +39,14 @@ public class PaysController {
         }
         }
     @PostMapping("/pays")
-    public ResponseEntity<PaysDto> createPay(@RequestBody PaysDto payDto) {
-        Pays pays = PaysMapper.toEntity(payDto);
+    public ResponseEntity<PaysDto> createPay(@RequestBody PaysDto paysDto) {
+        if (paysDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Pays pays = PaysMapper.toEntity(paysDto);
         Pays savedPays = paysRepository.save(pays);
-        PaysDto savedPayDto = PaysMapper.toDto(savedPays);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedPayDto);
+        PaysDto savedPaysDto = PaysMapper.toDto(savedPays);
+        return new ResponseEntity<>(savedPaysDto, HttpStatus.CREATED);
     }
     @DeleteMapping("/pays/{id}")
     public ResponseEntity<Void> deletePay(@PathVariable Integer id) {
@@ -54,8 +57,8 @@ public class PaysController {
         } else {
             return ResponseEntity.notFound().build();
         }
-        }
-    @CrossOrigin(origins = "http:localhost:3308")
+    }
+
     @PutMapping("/pays/{id}")
     public ResponseEntity<PaysDto> updatePays(@PathVariable Integer id, @RequestBody PaysDto paysDto) {
             Optional<Pays> foundPaysOptional = paysRepository.findById(id);

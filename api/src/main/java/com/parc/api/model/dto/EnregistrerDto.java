@@ -19,5 +19,7 @@ public class EnregistrerDto {
 
     private EnregistrerId idEnregistrer;
     private LocalDate dateEnregistrer;
+    private ParcDto idParc;
+    private UtilisateurDto idUtilisateur;
 
 }

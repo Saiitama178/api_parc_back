@@ -11,4 +11,5 @@ public class VilleDto {
     private int idVille;
     private String nomVille;
     private String codePostal;
+    private RegionDto idRegion;
 }

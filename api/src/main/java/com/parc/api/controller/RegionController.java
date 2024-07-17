@@ -1,13 +1,11 @@
 package com.parc.api.controller;
 
 import com.parc.api.model.dto.RegionDto;
-import com.parc.api.model.entity.Pays;
 import com.parc.api.model.entity.Region;
 import com.parc.api.model.mapper.RegionMapper;
 import com.parc.api.repository.PaysRepository;
 import com.parc.api.repository.RegionRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,18 +36,18 @@ public class RegionController {
             return ResponseEntity.notFound().build();
         }
     }
-    //
+
     private PaysRepository paysRepository;
-    @PostMapping("/region/{idPays}")
-    public ResponseEntity<RegionDto> createRegionByPays(@RequestBody RegionDto regionDto, @PathVariable("idPays") int idPays) throws Exception  {
-        Pays pays = paysRepository.findById(idPays)
-        .orElseThrow(()-> new Exception("Erreur"));
-        Region region = RegionMapper.toEntity(regionDto, pays);
+    @PostMapping("/region/")
+    public ResponseEntity<RegionDto> createRegionByPays(@RequestBody RegionDto regionDto) {
+        if (regionDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Region region = RegionMapper.toEntity(regionDto);
         Region savedRegion = regionRepository.save(region);
         RegionDto savedRegionDto = RegionMapper.toDto(savedRegion);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedRegionDto);
+        return new ResponseEntity<>(savedRegionDto, HttpStatus.CREATED);
     }
-
 
 @DeleteMapping("/region/{id}")
 public ResponseEntity<Void> deleteRegion(@PathVariable Integer id) {
@@ -61,7 +59,7 @@ public ResponseEntity<Void> deleteRegion(@PathVariable Integer id) {
         return ResponseEntity.notFound().build();
     }
 }
-@CrossOrigin(origins = "http:localhost:3308")
+
 @PutMapping("/region/{id}")
 public ResponseEntity<RegionDto> updateRegion(@PathVariable Integer id, @RequestBody RegionDto regionDto) {
     Optional<Region> foundRegionOptional = regionRepository.findById(id);
@@ -73,8 +71,8 @@ public ResponseEntity<RegionDto> updateRegion(@PathVariable Integer id, @Request
         return ResponseEntity.ok(updatedRegionDto);
     } else {
         return ResponseEntity.notFound().build();
+        }
     }
 }
-    }
 
 

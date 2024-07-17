@@ -48,10 +48,13 @@ public class TypeImageContoller {
 
     @PostMapping("/typeImage")
     public ResponseEntity<TypeImageDto> createTypeImage(@RequestBody TypeImageDto typeImageDto) {
+        if (typeImageDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         TypeImage typeImage = TypeImageMapper.toEntity(typeImageDto);
         TypeImage savedTypeImage = typeImageRepository.save(typeImage);
         TypeImageDto savedTypeImageDto = TypeImageMapper.toDto(savedTypeImage);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedTypeImageDto);
+        return new ResponseEntity<>(savedTypeImageDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/typeImage/{id}")

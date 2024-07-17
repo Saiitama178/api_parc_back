@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TypeParcDto {
-    private int idTypeImage;
+    private int idTypeParc;
     private String libelleTypeParc;
 }

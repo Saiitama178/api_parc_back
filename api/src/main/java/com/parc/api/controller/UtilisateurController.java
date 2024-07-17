@@ -47,10 +47,13 @@ public class UtilisateurController {
 
     @PostMapping("/user")
     public ResponseEntity<UtilisateurDto> createUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
+        if (utilisateurDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         Utilisateur utilisateur = UtilisateurMapper.toEntity(utilisateurDto);
         Utilisateur savedUtilisateur = utilisateurRepository.save(utilisateur);
         UtilisateurDto savedUtilisateurDto = UtilisateurMapper.toDto(savedUtilisateur);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUtilisateurDto);
+        return new ResponseEntity<>(savedUtilisateurDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/user/{id}")

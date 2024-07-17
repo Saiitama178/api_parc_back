@@ -1,12 +1,9 @@
 package com.parc.api.controller;
 
-import com.parc.api.model.dto.ParcDto;
 import com.parc.api.model.dto.PossederDto;
 import com.parc.api.model.entity.*;
 import com.parc.api.model.mapper.PossederMapper;
-import com.parc.api.repository.ParcRepository;
 import com.parc.api.repository.PossederRepository;
-import com.parc.api.repository.ReseauxSociauxRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
@@ -23,8 +20,6 @@ import java.util.Optional;
 public class PossederController {
 
     private final PossederRepository possederRepository;
-    private final ParcRepository parcRepository;
-    private final ReseauxSociauxRepository reseauxSociauxRepository;
 
     @GetMapping("/posseder")
     @Operation(summary = "Affiche la liste de la table posseder", description = "Retourne une liste de la table posseder",
@@ -49,16 +44,15 @@ public class PossederController {
         }
     }
 
-    @PostMapping("/posseder/{idParc}/{idReseauxSociaux}")
-    public ResponseEntity<PossederDto> createPosseder(@RequestBody PossederDto possederDto,@PathVariable("idParc") int idParc,@PathVariable("idReseauxSociaux") int idReseauxSociaux) throws Exception {
-        Parc parc = parcRepository.findById(idParc)
-                .orElseThrow(()-> new Exception("erreur"));
-        ReseauxSociaux reseauxSociaux = reseauxSociauxRepository.findById(idReseauxSociaux)
-                .orElseThrow(()-> new Exception("erreur"));
-        Posseder posseder = PossederMapper.toEntity(possederDto, parc, reseauxSociaux);
+    @PostMapping("/posseder")
+    public ResponseEntity<PossederDto> createPosseder(@RequestBody PossederDto possederDto) {
+        if (possederDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Posseder posseder = PossederMapper.toEntity(possederDto);
         Posseder savedPosseder = possederRepository.save(posseder);
         PossederDto savedPossederDto = PossederMapper.toDto(savedPosseder);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedPossederDto);
+        return new ResponseEntity<>(savedPossederDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/posseder/{id}")

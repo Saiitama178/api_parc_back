@@ -2,12 +2,8 @@ package com.parc.api.controller;
 
 import com.parc.api.model.dto.ParcDto;
 import com.parc.api.model.entity.Parc;
-import com.parc.api.model.entity.Parking;
-import com.parc.api.model.entity.Ville;
 import com.parc.api.model.mapper.ParcMapper;
 import com.parc.api.repository.ParcRepository;
-import com.parc.api.repository.ParkingRepository;
-import com.parc.api.repository.VilleRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
@@ -16,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 import java.util.Optional;
 
 @RestController
@@ -25,10 +20,6 @@ import java.util.Optional;
 public class ParcController {
 
     private final ParcRepository parcRepository;
-    private final ParkingRepository parkingRepository;
-    private final VilleRepository villeRepository;
-
-
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/parc")
@@ -50,18 +41,15 @@ public class ParcController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-
-
-    @PostMapping("/parc/{idParking}/{idVille}")
-    public ResponseEntity<ParcDto> createParc(@RequestBody ParcDto parcDto,@PathVariable("idParking") int idParking, @PathVariable("idVille") int idVille) throws Exception {
-        Parking parking = parkingRepository.findById(idParking)
-                .orElseThrow(()-> new Exception("erreur"));
-        Ville ville = villeRepository.findById(idVille)
-                .orElseThrow(()-> new Exception("erreur"));
-        Parc parc = ParcMapper.toEntity(parcDto, parking, ville);
+    @PostMapping("/parc")
+    public ResponseEntity<ParcDto> createParc(@RequestBody ParcDto parcDto) {
+        if (parcDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Parc parc = ParcMapper.toEntity(parcDto);
         Parc savedParc = parcRepository.save(parc);
         ParcDto savedParcDto = ParcMapper.toDto(savedParc);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedParcDto);
+        return new ResponseEntity<>(savedParcDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/parc/{id}")
@@ -77,10 +65,8 @@ public class ParcController {
 
     @PutMapping("/parc/{id}")
     public ResponseEntity<ParcDto> updateParc(@PathVariable Integer id, @RequestBody ParcDto parcDto) {
-        // Rechercher le parc par son ID
         Optional<Parc> existingParc = parcRepository.findById(id);
         if (existingParc.isPresent()) {
-            // Mettre à jour les informations du parc
             Parc parc = existingParc.get();
             parc.setNomParc(parcDto.getNomParc());
             parc.setPresentation(parcDto.getPresentation());
@@ -94,12 +80,9 @@ public class ParcController {
             parc.setIsSejour(parcDto.getIsSejour());
             parc.setIsTransportCommun(parcDto.getIsTransportCommun());
             parc.setUrlAffilation(parcDto.getUrlAffilation());
-            // Sauvegarder les modifications dans la base de données
             parc = parcRepository.save(parc);
-            // Retourner la réponse HTTP avec le ParcDto mis à jour
             return ResponseEntity.ok(ParcMapper.toDto(parc));
         } else {
-            // Retourner une réponse 404 si le parc n'est pas trouvé
             return ResponseEntity.notFound().build();
         }
     }

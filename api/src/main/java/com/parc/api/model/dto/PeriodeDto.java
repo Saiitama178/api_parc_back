@@ -21,4 +21,6 @@ public class PeriodeDto {
     private LocalTime heureFermeturePeriode;
     private BigDecimal prixAdultePeriode;
     private BigDecimal prixEnfantPeriode;
+    private ParcDto idParc;
+
 }
