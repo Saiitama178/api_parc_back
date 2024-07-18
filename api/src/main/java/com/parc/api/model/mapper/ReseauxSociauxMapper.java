@@ -8,7 +8,6 @@ public class ReseauxSociauxMapper {
         ReseauxSociauxDto reseauxSociauxDto = new ReseauxSociauxDto();
         reseauxSociauxDto.setId(reseauxSociaux.getId());
         reseauxSociauxDto.setLibReseauxSociaux(reseauxSociaux.getLibReseauSociaux());
-        reseauxSociauxDto.setIconReseauxSociaux(reseauxSociaux.getIconReseauSociaux());
         return reseauxSociauxDto;
     }
 
@@ -16,7 +15,6 @@ public class ReseauxSociauxMapper {
         ReseauxSociaux reseauxSociaux = new ReseauxSociaux();
         reseauxSociaux.setId(reseauxSociauxDto.getId());
         reseauxSociaux.setLibReseauSociaux(reseauxSociauxDto.getLibReseauxSociaux());
-        reseauxSociaux.setIconReseauSociaux(reseauxSociauxDto.getIconReseauxSociaux());
         return reseauxSociaux;
     }
 }

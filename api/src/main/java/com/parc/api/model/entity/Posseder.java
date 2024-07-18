@@ -1,6 +1,8 @@
 package com.parc.api.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +24,8 @@ public class Posseder {
     @JoinColumn(name = "id_parc", nullable = false)
     private Parc idParc;
 
+    @Size(max = 250)
+    @NotNull
     @Column(name = "url_reseau_sociaux", nullable = false, length = 250)
     private String urlReseauSociaux;
 

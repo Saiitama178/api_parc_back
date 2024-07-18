@@ -20,7 +20,7 @@ public class ParkingController {
     private ParkingRepository parkingRepository;
 
     @GetMapping("/parking")
-    public ResponseEntity<List<ParkingDto>> getAllParc() {
+    public ResponseEntity<List<ParkingDto>> getAllParking() {
         List<Parking> parkingList = parkingRepository.findAll();
         List<ParkingDto> parkingDtoList = parkingList.stream()
                 .map(ParkingMapper::toDto).toList();

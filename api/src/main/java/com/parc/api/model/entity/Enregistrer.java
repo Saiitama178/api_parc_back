@@ -1,6 +1,7 @@
 package com.parc.api.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +25,7 @@ public class Enregistrer {
     @JoinColumn(name = "id_utilisateur", nullable = false)
     private Utilisateur idUtilisateur;
 
+    @NotNull
     @Column(name = "date_enregistrer", nullable = false)
     private LocalDate dateEnregistrer;
 

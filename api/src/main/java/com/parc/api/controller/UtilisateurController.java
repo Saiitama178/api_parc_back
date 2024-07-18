@@ -76,8 +76,6 @@ public class UtilisateurController {
             utilisateur.setEmail(utilisateurDto.getEmail());
             utilisateur.setMdp(utilisateurDto.getMdp());
             utilisateur.setDateCreation(utilisateurDto.getDateCreation());
-            utilisateur.setRole(utilisateur.getRole());
-            utilisateur.setToken(utilisateurDto.getToken());
             utilisateur.setIsActive(utilisateurDto.getIsActive());
             utilisateur = utilisateurRepository.save(utilisateur);
             return ResponseEntity.ok(UtilisateurMapper.toDto(utilisateur));

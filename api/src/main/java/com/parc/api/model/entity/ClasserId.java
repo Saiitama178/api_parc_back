@@ -2,6 +2,7 @@ package com.parc.api.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
@@ -13,9 +14,11 @@ import java.util.Objects;
 @Embeddable
 public class ClasserId implements java.io.Serializable {
     private static final long serialVersionUID = 4493635307049167951L;
+    @NotNull
     @Column(name = "id_parc", nullable = false)
     private Integer idParc;
 
+    @NotNull
     @Column(name = "id_type_parc", nullable = false)
     private Integer idTypeParc;
 

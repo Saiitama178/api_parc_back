@@ -15,7 +15,7 @@ public class UtilisateurDto {
     private String email;
     private String mdp;
     private LocalDate dateCreation;
-    private Boolean role = false;
-    private String token;
     private Boolean isActive = false;
+    private RoleDto idRole;
+
 }

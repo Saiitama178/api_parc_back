@@ -12,15 +12,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "type_image")
-public class TypeImage {
+@Table(name = "role")
+public class Role {
     @Id
-    @Column(name = "id_type_image", nullable = false)
+    @Column(name = "id_role", nullable = false)
     private Integer id;
 
     @Size(max = 50)
     @NotNull
-    @Column(name = "lib_type_image", nullable = false, length = 50)
-    private String libTypeImage;
+    @Column(name = "lib_role", nullable = false, length = 50)
+    private String libRole;
 
 }
