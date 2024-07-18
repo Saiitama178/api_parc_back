@@ -30,15 +30,15 @@ public class ParcMapper {
         parcDto.setIsSejour(parc.getIsSejour());
         parcDto.setIsTransportCommun(parc.getIsTransportCommun());
         parcDto.setUrlAffilation(parc.getUrlAffilation());
-        parcDto.setParking(parkingDto);
-        parcDto.setVille(villeDto);
+        parcDto.setIdParking(parkingDto);
+        parcDto.setIdVille(villeDto);
         return parcDto;
     }
 
     public static Parc toEntity(ParcDto parcDto) {
 
-        Parking parking = ParkingMapper.toEntity(parcDto.getParking());
-        Ville ville = VilleMapper.toEntity(parcDto.getVille());
+        Parking parking = ParkingMapper.toEntity(parcDto.getIdParking());
+        Ville ville = VilleMapper.toEntity(parcDto.getIdVille());
 
         Parc parc = new Parc();
         parc.setId(parcDto.getId());

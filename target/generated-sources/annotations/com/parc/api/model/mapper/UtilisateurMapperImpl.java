@@ -9,5 +9,5 @@ import org.springframework.stereotype.Component;
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 22.0.2 (Oracle Corporation)"
 )
 @Component
-public class ParcMapperImpl extends ParcMapper {
+public class UtilisateurMapperImpl extends UtilisateurMapper {
 }

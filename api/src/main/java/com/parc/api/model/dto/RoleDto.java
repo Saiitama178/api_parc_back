@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReseauxSociauxDto {
-    private Integer id;
-    private String libReseauxSociaux;
+public class RoleDto {
+    private int idRole;
+    private String libRole;
 }
