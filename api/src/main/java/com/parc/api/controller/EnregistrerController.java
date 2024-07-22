@@ -5,8 +5,6 @@ import com.parc.api.model.dto.EnregistrerDto;
 import com.parc.api.model.entity.Enregistrer;
 import com.parc.api.model.mapper.EnregistrerMapper;
 import com.parc.api.repository.EnregistrerRepository;
-import com.parc.api.repository.ParcRepository;
-import com.parc.api.repository.UtilisateurRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +18,6 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000")
 public class EnregistrerController {
     private final EnregistrerRepository enregistrerRepository;
-    private final ParcRepository parcRepository;
-    private final UtilisateurRepository utilisateurRepository;
 
     @GetMapping("/enregistrer")
     public ResponseEntity<List<EnregistrerDto>> getAllEnregistrer(){

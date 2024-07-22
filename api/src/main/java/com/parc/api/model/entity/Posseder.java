@@ -12,6 +12,7 @@ import lombok.Setter;
 @Table(name = "posseder")
 public class Posseder {
     @EmbeddedId
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private PossederId id;
 
     @MapsId("idReseauSociaux")
