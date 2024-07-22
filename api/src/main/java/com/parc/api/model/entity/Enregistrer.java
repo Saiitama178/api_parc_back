@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @Table(name = "enregister")
 public class Enregistrer {
     @EmbeddedId
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private EnregistrerId id;
 
     @MapsId("idParc")

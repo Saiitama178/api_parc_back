@@ -10,6 +10,7 @@ import lombok.Setter;
 @Table(name = "classer")
 public class Classer {
     @EmbeddedId
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private ClasserId id;
 
     @MapsId("idParc")
