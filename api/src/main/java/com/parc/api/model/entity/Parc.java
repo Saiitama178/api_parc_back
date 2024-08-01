@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 @Entity
@@ -78,5 +79,6 @@ public class Parc {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_parking", nullable = false)
     private Parking idParking;
+
 
 }
