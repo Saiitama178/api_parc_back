@@ -27,7 +27,7 @@ public class ConfigurationSecurityApplication {
                         .csrf(AbstractHttpConfigurer::disable) // consider enabling CSRF protection
                         .authorizeHttpRequests(autorize -> {
                             autorize.requestMatchers(POST, "/inscription", "/activation", "/connexion").permitAll()
-                                    .requestMatchers(GET, "/commentaire").permitAll()
+                                    .requestMatchers(GET, "/commentaire","/pays").permitAll()
                                     .anyRequest().authenticated();
                         })
                         .build();
