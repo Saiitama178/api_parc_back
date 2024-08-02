@@ -8,13 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Collections;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,7 +17,7 @@ import java.util.Collections;
 @Setter
 @Entity
 @Table(name = "utilisateur")
-public class Utilisateur implements UserDetails {
+public class Utilisateur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_utilisateur", nullable = false)
@@ -57,18 +52,4 @@ public class Utilisateur implements UserDetails {
     @JoinColumn(name = "id_role", nullable = false)
     private Role idRole;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("role_"+this.idRole.getLibRole()));
-    }
-
-    @Override
-    public String getPassword() {
-        return this.mdp;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
 }
