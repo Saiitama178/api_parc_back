@@ -1,25 +1,31 @@
 package com.parc.api.controller;
 
+import com.parc.api.model.dto.AuthentificationDTO;
 import com.parc.api.model.dto.UtilisateurDto;
-import com.parc.api.model.entity.Utilisateur;
-import com.parc.api.model.mapper.UtilisateurMapper;
-import com.parc.api.repository.UtilisateurRepository;
+import com.parc.api.service.UtilisateurService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+
+import static org.hibernate.query.sqm.tree.SqmNode.log;
+
 
 @RestController
 @AllArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 public class UtilisateurController {
 
-    private final UtilisateurRepository utilisateurRepository;
+    private AuthenticationManager authenticationManager;
+    private final UtilisateurService utilisateurService;
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/user")
@@ -28,60 +34,51 @@ public class UtilisateurController {
                     @ApiResponse(responseCode = "200", description = " Liste utilisateur")
             })
     public ResponseEntity<List<UtilisateurDto>> getAllUtilisateur() {
-        List<Utilisateur> utilisateurList = utilisateurRepository.findAll();
-        List<UtilisateurDto> utilisateurDtos = utilisateurList.stream()
-                .map(UtilisateurMapper::toDto).toList();
-        return ResponseEntity.ok(utilisateurDtos);
+        return this.utilisateurService.getAllUtilisateur();
     }
 
     @GetMapping("/user/{id}")
     public ResponseEntity<UtilisateurDto> getUtilisateurById(@PathVariable Integer id) {
-        Optional<Utilisateur> utilisateur = utilisateurRepository.findById(id);
-        if (utilisateur.isPresent()) {
-            UtilisateurDto utilisateurDto = UtilisateurMapper.toDto(utilisateur.get());
-            return ResponseEntity.ok(utilisateurDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.utilisateurService.getUtilisateurById(id);
     }
 
-    @PostMapping("/user")
+    @PostMapping("/inscription")
     public ResponseEntity<UtilisateurDto> createUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
-        if (utilisateurDto == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return this.utilisateurService.createUtilisateur(utilisateurDto);
+    }
+
+    @PostMapping("/activation")
+    public void activation(@RequestBody Map<String, String> activation) {
+        this.utilisateurService.activation(activation);
+    }
+
+    @PostMapping("/connexion")
+    public ResponseEntity<Map<String, String>> connexion(@RequestBody AuthentificationDTO authentificationDTO) {
+        try {
+            final Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authentificationDTO.email(), authentificationDTO.password())
+            );
+            if (authentication.isAuthenticated()) {
+                log.info("Authentication successful");
+                return ResponseEntity.ok(Map.of("message", "Authentication successful"));
+            } else {
+                log.info("Authentication failed");
+                return ResponseEntity.badRequest().body(Map.of("error", "Invalid credentials"));
+            }
+        } catch (BadCredentialsException e) {
+            log.info("Invalid credentials");
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid credentials"));
         }
-        Utilisateur utilisateur = UtilisateurMapper.toEntity(utilisateurDto);
-        Utilisateur savedUtilisateur = utilisateurRepository.save(utilisateur);
-        UtilisateurDto savedUtilisateurDto = UtilisateurMapper.toDto(savedUtilisateur);
-        return new ResponseEntity<>(savedUtilisateurDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/user/{id}")
     public ResponseEntity<Void> deleteUtilisateur(@PathVariable Integer id) {
-        Optional<Utilisateur> utilisateurOptional = utilisateurRepository.findById(id);
-        if (utilisateurOptional.isPresent()) {
-            utilisateurRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.utilisateurService.deleteUtilisateur(id);
     }
 
-    @PutMapping("/user/{id}")
+    @PutMapping("/user/maj/{id}")
     public ResponseEntity<UtilisateurDto> updateUtilisateur(@PathVariable Integer id, @RequestBody UtilisateurDto utilisateurDto) {
-        Optional<Utilisateur> existingUtilisateur = utilisateurRepository.findById(id);
-        if (existingUtilisateur.isPresent()) {
-            Utilisateur utilisateur = existingUtilisateur.get();
-            utilisateur.setPseudo(utilisateurDto.getPseudo());
-            utilisateur.setEmail(utilisateurDto.getEmail());
-            utilisateur.setMdp(utilisateurDto.getMdp());
-            utilisateur.setDateCreation(utilisateurDto.getDateCreation());
-            utilisateur.setIsActive(utilisateurDto.getIsActive());
-            utilisateur = utilisateurRepository.save(utilisateur);
-            return ResponseEntity.ok(UtilisateurMapper.toDto(utilisateur));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-        }
+        return this.utilisateurService.updateUtilisateur(id, utilisateurDto);
     }
+}
 
