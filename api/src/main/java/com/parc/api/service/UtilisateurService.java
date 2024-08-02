@@ -57,7 +57,7 @@ public class UtilisateurService implements UserDetailsService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email déjà existant");
         }
         // Validation du format de l'email en utilisant une expression régulière
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.+$";
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         if (!utilisateurDto.getEmail().matches(emailRegex)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Format de l'email invalide");
         }
