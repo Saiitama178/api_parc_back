@@ -4,6 +4,7 @@ import com.parc.api.model.entity.Utilisateur;
 import com.parc.api.model.entity.Validation;
 import com.parc.api.repository.ValidationRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -35,6 +36,14 @@ public class ValidationService {
     }
 
     public Validation LireEnFonctionDuCode(String code) {
-        return this.validationRepository.findByCode(code).orElseThrow(() -> new RuntimeException("code valide"));
+        if (code == null || code.trim().isEmpty()) {
+            throw new IllegalArgumentException("Code cannot be null or empty");
+        }
+        try {
+            return this.validationRepository.findByCode(code)
+                    .orElseThrow(() -> new IllegalArgumentException("Code valide not found"));
+        } catch (RuntimeException e) {
+            throw new RuntimeException("An unexpected error occurred", e);
+        }
     }
 }
