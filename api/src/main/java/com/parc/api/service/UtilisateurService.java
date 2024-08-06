@@ -8,6 +8,9 @@ import com.parc.api.repository.UtilisateurRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +25,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Service
-public class UtilisateurService {
+public class UtilisateurService implements UserDetailsService {
 
     private  UtilisateurRepository utilisateurRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -111,5 +114,12 @@ public class UtilisateurService {
                         -> new RuntimeException("utilisateur inconnu"));
         utilisateurActiver.setIsActive(true);
         this.utilisateurRepository.save(utilisateurActiver);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Utilisateur utilisateur = this.utilisateurRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur ne correspond à cet identifiant"));
+        return new UserDetail(utilisateur);
     }
 }
