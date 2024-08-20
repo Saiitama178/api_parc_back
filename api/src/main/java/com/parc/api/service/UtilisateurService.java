@@ -6,7 +6,6 @@ import com.parc.api.model.entity.Validation;
 import com.parc.api.model.mapper.UtilisateurMapper;
 import com.parc.api.repository.UtilisateurRepository;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -119,8 +118,8 @@ public class UtilisateurService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return this.utilisateurRepository.findByEmail(email)
-                .orElseThrow(()
-                        -> new UsernameNotFoundException("Aucun utilisateur ne corespond à cet identifiant"));
+        Utilisateur utilisateur = this.utilisateurRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur ne correspond à cet identifiant"));
+        return new UserDetail(utilisateur);
     }
 }
