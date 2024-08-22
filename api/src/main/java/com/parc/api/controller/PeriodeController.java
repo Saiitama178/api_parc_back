@@ -3,7 +3,6 @@ package com.parc.api.controller;
 import com.parc.api.model.dto.PeriodeDto;
 import com.parc.api.model.entity.Periode;
 import com.parc.api.model.mapper.PeriodeMapper;
-import com.parc.api.repository.ParcRepository;
 import com.parc.api.repository.PeriodeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

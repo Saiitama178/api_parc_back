@@ -2,7 +2,6 @@ package com.parc.api.controller;
 
 import com.parc.api.model.dto.AuthentificationDTO;
 import com.parc.api.model.dto.UtilisateurDto;
-import com.parc.api.service.JwtService;
 import com.parc.api.service.UtilisateurService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,7 +26,6 @@ public class UtilisateurController {
 
     private AuthenticationManager authenticationManager;
     private final UtilisateurService utilisateurService;
-    private JwtService jwtService;
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/user")

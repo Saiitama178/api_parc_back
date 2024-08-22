@@ -3,7 +3,6 @@ package com.parc.api.controller;
 import com.parc.api.model.dto.RegionDto;
 import com.parc.api.model.entity.Region;
 import com.parc.api.model.mapper.RegionMapper;
-import com.parc.api.repository.PaysRepository;
 import com.parc.api.repository.RegionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,7 +36,7 @@ public class RegionController {
         }
     }
 
-    private PaysRepository paysRepository;
+
     @PostMapping("/region/")
     public ResponseEntity<RegionDto> createRegionByPays(@RequestBody RegionDto regionDto) {
         if (regionDto == null) {

@@ -1,10 +1,7 @@
 package com.parc.api.controller;
 
-import com.parc.api.model.dto.ParkingDto;
 import com.parc.api.model.dto.RoleDto;
-import com.parc.api.model.entity.Parking;
 import com.parc.api.model.entity.Role;
-import com.parc.api.model.mapper.ParkingMapper;
 import com.parc.api.model.mapper.RoleMapper;
 import com.parc.api.repository.RoleRepository;
 import lombok.AllArgsConstructor;
