@@ -3,6 +3,7 @@ import com.parc.api.model.dto.PaysDto;
 import com.parc.api.model.mapper.PaysMapper;
 import com.parc.api.model.entity.Pays;
 import com.parc.api.repository.PaysRepository;
+import com.parc.api.service.PaysService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,65 +15,19 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-//@RequestMapping("/api")
+@RequestMapping("/pays")
 
 public class PaysController {
 
-    private final PaysRepository paysRepository;
+    private final PaysService paysService;
 
-    @GetMapping("/pays")
+    @GetMapping
     public ResponseEntity<List<PaysDto>> getAllPays() {
-        List<Pays> pays = paysRepository.findAll();
-        List<PaysDto> paysDto = pays.stream()
-                .map(PaysMapper::toDto)
-                .collect(Collectors.toList());
+        List<PaysDto> paysDto = paysService.getAllPays();
         return ResponseEntity.ok(paysDto);
-    }
-    @GetMapping("/pays/{id}")
-    public ResponseEntity<PaysDto> getPaysById(@PathVariable Integer id) {
-        Optional<Pays> pays = paysRepository.findById(id);
-        if (pays.isPresent()) {
-            PaysDto paysDto = PaysMapper.toDto(pays.get());
-            return ResponseEntity.ok(paysDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-        }
-    @PostMapping("/pays")
-    public ResponseEntity<PaysDto> createPay(@RequestBody PaysDto paysDto) {
-        if (paysDto == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        Pays pays = PaysMapper.toEntity(paysDto);
-        Pays savedPays = paysRepository.save(pays);
-        PaysDto savedPaysDto = PaysMapper.toDto(savedPays);
-        return new ResponseEntity<>(savedPaysDto, HttpStatus.CREATED);
-    }
-    @DeleteMapping("/pays/{id}")
-    public ResponseEntity<Void> deletePay(@PathVariable Integer id) {
-        Optional<Pays> paysOptional = paysRepository.findById(id);
-        if (paysOptional.isPresent()) {
-            paysRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+    }}
 
-    @PutMapping("/pays/{id}")
-    public ResponseEntity<PaysDto> updatePays(@PathVariable Integer id, @RequestBody PaysDto paysDto) {
-            Optional<Pays> foundPaysOptional = paysRepository.findById(id);
-            if (foundPaysOptional.isPresent()) {
-                Pays foundPays = foundPaysOptional.get();
-                foundPays.setNomPays(paysDto.getNomPays());
-                Pays savedPays = paysRepository.save(foundPays);
-                PaysDto updatedPaysDto = PaysMapper.toDto(savedPays);
-                return ResponseEntity.ok(updatedPaysDto);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        }
 
-    }
+
 
 
