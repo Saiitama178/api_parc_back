@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class PeriodeController {
 
     private final PeriodeRepository periodeRepository;
