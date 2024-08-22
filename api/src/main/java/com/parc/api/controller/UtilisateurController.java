@@ -2,6 +2,7 @@ package com.parc.api.controller;
 
 import com.parc.api.model.dto.AuthentificationDTO;
 import com.parc.api.model.dto.UtilisateurDto;
+import com.parc.api.service.JwtService;
 import com.parc.api.service.UtilisateurService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,6 +27,7 @@ public class UtilisateurController {
 
     private AuthenticationManager authenticationManager;
     private final UtilisateurService utilisateurService;
+    private JwtService jwtService;
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/user")
@@ -58,16 +60,18 @@ public class UtilisateurController {
             final Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authentificationDTO.email(), authentificationDTO.password())
             );
+
             if (authentication.isAuthenticated()) {
-                log.info("Authentication successful");
-                return ResponseEntity.ok(Map.of("message", "Authentication successful"));
+                //this.jwtService.generate(authentificationDTO.email());
+                log.info("Authentification réussie");
+                return ResponseEntity.ok(Map.of("message", "Authentification réussie"));
             } else {
-                log.info("Authentication failed");
-                return ResponseEntity.badRequest().body(Map.of("error", "Invalid credentials"));
+                log.info("Authentification échouée");
+                return ResponseEntity.badRequest().body(Map.of("error", "les informations d'identification sont invalides "));
             }
         } catch (BadCredentialsException e) {
-            log.info("Invalid credentials");
-            return ResponseEntity.badRequest().body(Map.of("error", "Invalid credentials"));
+            log.info("les informations d'identification invalides");
+            return ResponseEntity.badRequest().body(Map.of("error", "les informations d'identification sont invalides"));
         }
     }
 
