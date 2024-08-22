@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.StatusResultMatchersExtensionsKt.isEqualTo;
 //https://www.youtube.com/watch?v=QhLlkygUhtI
 @DataJpaTest
-public class PaysRepositoryTestTramoTech {
+public class PaysRepositoryTest {
     @Autowired
     PaysRepository paysRepository;
     @Autowired
