@@ -22,5 +22,8 @@ public class PaysService {
                 .map(PaysMapper::toDto)
                 .collect(Collectors.toList());
     }
-
+    public Optional<PaysDto> getPaysById(Integer id) {
+        Optional<Pays> pays = paysRepository.findById(id);
+        return pays.map(PaysMapper::toDto);
+    }
 }

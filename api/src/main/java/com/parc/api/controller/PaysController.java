@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -22,6 +23,12 @@ public class PaysController {
     public ResponseEntity<List<PaysDto>> getAllPays() {
         List<PaysDto> paysDto = paysService.getAllPays();
         return ResponseEntity.ok(paysDto);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<PaysDto> getPaysById(@PathVariable Integer id) {
+        Optional<PaysDto> paysDto = paysService.getPaysById(id);
+        return paysDto.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
     }
 
