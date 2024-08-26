@@ -26,4 +26,12 @@ public class PaysService {
         Optional<Pays> pays = paysRepository.findById(id);
         return pays.map(PaysMapper::toDto);
     }
+    //240826
+    public PaysDto createPays(PaysDto paysDto) {
+        Pays pays = PaysMapper.toEntity(paysDto);
+        Pays savedPays = paysRepository.save(pays);
+        return PaysMapper.toDto(savedPays);
+    }
+
+
 }
