@@ -1,6 +1,7 @@
 package com.parc.api.service;
 
 import com.parc.api.model.dto.PaysDto;
+<<<<<<< HEAD
 import com.parc.api.model.entity.Pays;
 import com.parc.api.model.mapper.PaysMapper;
 import com.parc.api.repository.PaysRepository;
@@ -48,4 +49,15 @@ public class PaysService {
 
 
 
+=======
+
+import java.util.List;
+
+public interface PaysService {
+    List<PaysDto> getAllPays();
+    PaysDto getPaysById(Integer id);
+    PaysDto createPays(PaysDto paysDto);
+    void deletePays(Integer id);
+    PaysDto updatePays(Integer id, PaysDto paysDto);
+>>>>>>> origin/OlivierBranche
 }
