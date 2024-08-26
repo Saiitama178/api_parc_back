@@ -32,6 +32,20 @@ public class PaysService {
         Pays savedPays = paysRepository.save(pays);
         return PaysMapper.toDto(savedPays);
     }
+    //
+    public void deletePays(Integer id) {
+        paysRepository.deleteById(id);
+    }
+    //
+    public PaysDto updatePays(Integer id, PaysDto paysDto) {
+        return paysRepository.findById(id)
+                .map(pays -> {
+                    pays.setNomPays(paysDto.getNomPays());
+                    return PaysMapper.toDto(paysRepository.save(pays));
+                })
+                .orElse(null);
+    }
+
 
 
 }

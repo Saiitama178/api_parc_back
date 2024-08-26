@@ -36,7 +36,19 @@ public class PaysController {
     public ResponseEntity<PaysDto> createPays(@RequestBody PaysDto paysDto) {
         PaysDto createdPaysDto = paysService.createPays(paysDto);
         return new ResponseEntity<>(createdPaysDto, HttpStatus.CREATED);
-
+    }
+    //
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePays(@PathVariable Integer id) {
+        paysService.deletePays(id);
+        return ResponseEntity.noContent().build();
+    }
+    //
+    @PutMapping("/{id}")
+    public ResponseEntity<PaysDto> updatePays(@PathVariable Integer id, @RequestBody PaysDto paysDto) {
+        PaysDto updatedPaysDto = paysService.updatePays(id, paysDto);
+        return updatedPaysDto != null ? ResponseEntity.ok(updatedPaysDto):
+                ResponseEntity.notFound().build();
     }
     }
 
