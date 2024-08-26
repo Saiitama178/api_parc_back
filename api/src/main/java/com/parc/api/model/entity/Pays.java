@@ -25,4 +25,10 @@ public class Pays {
     @Column(name = "nom_pays", nullable = false, length = 50)
     private String nomPays;
 
+    public Pays(int i, String france) {
+    }
+
+    public Pays() {
+
+    }
 }
