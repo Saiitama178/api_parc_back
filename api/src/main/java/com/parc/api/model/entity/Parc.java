@@ -24,7 +24,7 @@ public class Parc {
 
     @NotNull
     @Lob
-    @Column(name = "presentation", nullable = false)
+    @Column(name = "presentation",columnDefinition = "TEXT", nullable = false)
     private String presentation;
 
     @Size(max = 228)

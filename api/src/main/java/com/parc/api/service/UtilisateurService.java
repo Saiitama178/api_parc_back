@@ -8,11 +8,9 @@ import com.parc.api.repository.UtilisateurRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,13 +23,13 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Service
-public class UtilisateurService implements UserDetailsService {
+public class UtilisateurService {
 
-    private  UtilisateurRepository utilisateurRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private ValidationService validationService;
+    private final UtilisateurRepository utilisateurRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ValidationService validationService;
 
-
+    @Transactional(readOnly = true)
     public ResponseEntity<List<UtilisateurDto>> getAllUtilisateur() {
         List<Utilisateur> utilisateurList = utilisateurRepository.findAll();
         List<UtilisateurDto> utilisateurDtos = utilisateurList.stream()
@@ -39,6 +37,7 @@ public class UtilisateurService implements UserDetailsService {
         return ResponseEntity.ok(utilisateurDtos);
     }
 
+    @Transactional(readOnly = true)
     public ResponseEntity<UtilisateurDto> getUtilisateurById(@PathVariable Integer id) {
         Optional<Utilisateur> utilisateur = utilisateurRepository.findById(id);
         if (utilisateur.isPresent()) {
@@ -49,6 +48,7 @@ public class UtilisateurService implements UserDetailsService {
         }
     }
 
+    @Transactional
     public ResponseEntity<UtilisateurDto> createUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
         // Vérifie si l'email existe déjà dans la base de données
         Optional<Utilisateur> utilisateurOptional = this.utilisateurRepository.findByEmail(utilisateurDto.getEmail());
@@ -73,9 +73,9 @@ public class UtilisateurService implements UserDetailsService {
         this.validationService.enregistrer(savedUtilisateur);
         // Retourne une réponse avec le statut créé
         return new ResponseEntity<>(savedUtilisateurDto, HttpStatus.CREATED);
-
     }
 
+    @Transactional
     public ResponseEntity<Void> deleteUtilisateur(@PathVariable Integer id) {
         Optional<Utilisateur> utilisateurOptional = utilisateurRepository.findById(id);
         if (utilisateurOptional.isPresent()) {
@@ -86,6 +86,7 @@ public class UtilisateurService implements UserDetailsService {
         }
     }
 
+    @Transactional
     public ResponseEntity<UtilisateurDto> updateUtilisateur(@PathVariable Integer id, @RequestBody UtilisateurDto utilisateurDto) {
         Optional<Utilisateur> existingUtilisateur = utilisateurRepository.findById(id);
         if (existingUtilisateur.isPresent()) {
@@ -104,22 +105,16 @@ public class UtilisateurService implements UserDetailsService {
         }
     }
 
-    public void  activation(Map<String, String> activation) {
+    @Transactional
+    public void activation(Map<String, String> activation) {
         Validation validation = this.validationService.LireEnFonctionDuCode(activation.get("code"));
         if (Instant.now().isAfter(validation.getExpire())) {
             throw new RuntimeException("votre code a expiré");
         }
         Utilisateur utilisateurActiver = this.utilisateurRepository.findById(validation.getUtilisateur().getId())
-                .orElseThrow(()
-                        -> new RuntimeException("utilisateur inconnu"));
+                .orElseThrow(() -> new RuntimeException("utilisateur inconnu"));
         utilisateurActiver.setIsActive(true);
         this.utilisateurRepository.save(utilisateurActiver);
     }
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Utilisateur utilisateur = this.utilisateurRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur ne correspond à cet identifiant"));
-        return new UserDetail(utilisateur);
-    }
 }
+
