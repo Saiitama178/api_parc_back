@@ -1,5 +1,7 @@
 package com.parc.api.configuration;
 
+import com.parc.api.service.UserLoaderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,29 +11,36 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class ConfigurationSecurityApplication {
 
+    private final JwtFilter jwtFilter;
+    private final UserLoaderService userLoaderService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return
                 httpSecurity
                         .csrf(AbstractHttpConfigurer::disable) // consider enabling CSRF protection
-                        .authorizeHttpRequests(autorize -> {
-                            autorize.requestMatchers(POST, "/inscription", "/activation", "/connexion","/pays/{id}","/pays/**","/periode/**").permitAll()
+                        .authorizeHttpRequests(authorize -> authorize
+                                .requestMatchers(POST, "/inscription", "/activation", "/connexion","/pays/{id}","/pays/**","/periode/**").permitAll()
                                     .requestMatchers(GET, "/commentaire","/pays","/periode","/pays/**","/periode/**").permitAll()
                                     .requestMatchers(PUT, "/pays","/pays/**").permitAll()
                                     .requestMatchers(DELETE, "/pays","/pays/**").permitAll()
-                                    .anyRequest().authenticated();
-                        })
+                                    .anyRequest().authenticated()
+                        )
+                        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                         .build();
     }
 
@@ -46,9 +55,14 @@ public class ConfigurationSecurityApplication {
     }
 
     @Bean
+    public UserDetailsService userDetailsService() {
+        return userLoaderService;
+    }
+
+    @Bean
     public AuthenticationProvider authenticationProvider (UserDetailsService userDetailsService) {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService());
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
     }

@@ -48,7 +48,7 @@ public class Utilisateur {
     private Boolean isActive;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_role", nullable = false)
     private Role idRole;
 

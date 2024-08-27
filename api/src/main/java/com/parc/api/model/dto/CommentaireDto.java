@@ -2,7 +2,6 @@ package com.parc.api.model.dto;
 
 
 
-import com.parc.api.model.entity.ClasserId;
 import lombok.*;
 
 

@@ -25,9 +25,9 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 @CrossOrigin(origins = "http://localhost:3000")
 public class UtilisateurController {
 
+    private final JwtService jwtService;
     private AuthenticationManager authenticationManager;
     private final UtilisateurService utilisateurService;
-    private JwtService jwtService;
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/user")
@@ -62,16 +62,19 @@ public class UtilisateurController {
             );
 
             if (authentication.isAuthenticated()) {
-                //this.jwtService.generate(authentificationDTO.email());
+
                 log.info("Authentification réussie");
-                return ResponseEntity.ok(Map.of("message", "Authentification réussie"));
+
+                String token = jwtService.generateToken(authentificationDTO.email());
+
+                return ResponseEntity.ok(Map.of("token", token));
             } else {
                 log.info("Authentification échouée");
-                return ResponseEntity.badRequest().body(Map.of("error", "les informations d'identification sont invalides "));
+                return ResponseEntity.badRequest().body(Map.of("error", "les informations d'identifications sont invalides "));
             }
         } catch (BadCredentialsException e) {
             log.info("les informations d'identification invalides");
-            return ResponseEntity.badRequest().body(Map.of("error", "les informations d'identification sont invalides"));
+            return ResponseEntity.badRequest().body(Map.of("error", "les informations d'identifications sont invalides"));
         }
     }
 
