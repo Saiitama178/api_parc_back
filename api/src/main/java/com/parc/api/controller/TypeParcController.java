@@ -5,7 +5,10 @@ import com.parc.api.model.entity.TypeParc;
 import com.parc.api.model.mapper.TypeParcMapper;
 import com.parc.api.repository.TypeParcRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,16 +20,20 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/type-parc")
+@Tag(name = "type-parc", description = "Opérations sur les types de parc")
 public class TypeParcController {
 
     private final TypeParcRepository typeParcRepository;
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/typeParc")
-    @Operation(summary = "Affiche la liste des types de parc", description = "Retourne une liste des types de parc",
+    @Operation(
+            summary = "Affiche la liste des types de parc",
+            description = "Retourne une liste de tous les types de parc.",
+            operationId = "type-parc",
             responses = {
-                    @ApiResponse(responseCode = "200", description = " Liste type parc")
+                    @ApiResponse(responseCode = "200", description = "Liste des types de parc retournée", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TypeParcDto.class))),
+                    @ApiResponse(responseCode = "500", description = "Erreur serveur interne")
             })
     public ResponseEntity<List<TypeParcDto>> getTypeParc() {
         List<TypeParc> typeParcs = typeParcRepository.findAll();
@@ -37,18 +44,31 @@ public class TypeParcController {
     }
 
     @GetMapping("/typeParc/{id}")
+    @Operation(
+            summary = "Affiche un type de parc par ID",
+            description = "Retourne un type de parc basé sur son ID.",
+            operationId = "type-parc",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Type de parc trouvé", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TypeParcDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Type de parc non trouvé")
+            })
     public ResponseEntity<TypeParcDto> getTypeParcById(@PathVariable Integer id) {
         Optional<TypeParc> typeParc = typeParcRepository.findById(id);
-        if (typeParc.isPresent()) {
-            TypeParcDto typeParcDto = TypeParcMapper.toDto(typeParc.get());
-            return ResponseEntity.ok(typeParcDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return typeParc
+                .map(typeParcEntity -> ResponseEntity.ok(TypeParcMapper.toDto(typeParcEntity)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/typeParc")
-    public ResponseEntity<TypeParcDto> createTypeImage(@RequestBody TypeParcDto typeParcDto) {
+    @Operation(
+            summary = "Crée un nouveau type de parc",
+            description = "Ajoute un nouveau type de parc à la base de données.",
+            operationId = "type-parc",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Type de parc créé", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TypeParcDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Requête invalide")
+            })
+    public ResponseEntity<TypeParcDto> createTypeParc(@RequestBody TypeParcDto typeParcDto) {
         if (typeParcDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -59,7 +79,15 @@ public class TypeParcController {
     }
 
     @DeleteMapping("/typeParc/{id}")
-    public ResponseEntity<Void> deleteTypeImage(@PathVariable Integer id) {
+    @Operation(
+            summary = "Supprime un type de parc",
+            description = "Supprime un type de parc basé sur son ID.",
+            operationId = "type-parc",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Type de parc supprimé"),
+                    @ApiResponse(responseCode = "404", description = "Type de parc non trouvé")
+            })
+    public ResponseEntity<Void> deleteTypeParc(@PathVariable Integer id) {
         Optional<TypeParc> typeParcOptional = typeParcRepository.findById(id);
         if (typeParcOptional.isPresent()) {
             typeParcRepository.deleteById(id);
@@ -70,7 +98,16 @@ public class TypeParcController {
     }
 
     @PutMapping("/typeParc/{id}")
-    public ResponseEntity<TypeParcDto> updateTypeImage(@PathVariable Integer id, @RequestBody TypeParcDto typeParcDto) {
+    @Operation(
+            summary = "Met à jour un type de parc",
+            description = "Met à jour les informations d'un type de parc existant basé sur son ID.",
+            operationId = "type-parc",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Type de parc mis à jour", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TypeParcDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Type de parc non trouvé"),
+                    @ApiResponse(responseCode = "400", description = "Données invalides")
+            })
+    public ResponseEntity<TypeParcDto> updateTypeParc(@PathVariable Integer id, @RequestBody TypeParcDto typeParcDto) {
         Optional<TypeParc> foundTypeParcOptional = typeParcRepository.findById(id);
         if (foundTypeParcOptional.isPresent()) {
             TypeParc foundTypeParc = foundTypeParcOptional.get();
@@ -83,3 +120,4 @@ public class TypeParcController {
         }
     }
 }
+
