@@ -1,4 +1,4 @@
-package com.parc.api.service;
+package com.parc.api.configuration;
 
 import com.parc.api.model.entity.Utilisateur;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @RequiredArgsConstructor
-public class UserDetail implements UserDetails {
+public class CustomUserDetail implements UserDetails {
 
     private final Utilisateur utilisateur;
 
