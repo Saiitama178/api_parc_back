@@ -20,8 +20,8 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
-@Tag(name = "TypeImage", description = "Opérations sur les types d'image")
+@RequestMapping("/type-image")
+@Tag(name = "type-Image", description = "Opérations sur les types d'image")
 public class TypeImageController {
 
     private final TypeImageRepository typeImageRepository;
@@ -30,6 +30,7 @@ public class TypeImageController {
     @Operation(
             summary = "Affiche la liste des types d'image",
             description = "Retourne une liste de tous les types d'image.",
+            operationId = "type-image",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -53,6 +54,7 @@ public class TypeImageController {
     @Operation(
             summary = "Affiche un type d'image par ID",
             description = "Retourne un type d'image basé sur son ID.",
+            operationId = "type-image",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -76,6 +78,7 @@ public class TypeImageController {
     @Operation(
             summary = "Crée un nouveau type d'image",
             description = "Ajoute un nouveau type d'image à la base de données.",
+            operationId = "type-image",
             responses = {
                     @ApiResponse(
                             responseCode = "201",
@@ -102,6 +105,7 @@ public class TypeImageController {
     @Operation(
             summary = "Supprime un type d'image",
             description = "Supprime un type d'image basé sur son ID.",
+            operationId = "type-image",
             responses = {
                     @ApiResponse(responseCode = "204", description = "Type d'image supprimé"),
                     @ApiResponse(responseCode = "404", description = "Type d'image non trouvé")
@@ -121,6 +125,7 @@ public class TypeImageController {
     @Operation(
             summary = "Met à jour un type d'image",
             description = "Met à jour les informations d'un type d'image existant basé sur son ID.",
+            operationId = "type-image",
             responses = {
                     @ApiResponse(
                             responseCode = "200",

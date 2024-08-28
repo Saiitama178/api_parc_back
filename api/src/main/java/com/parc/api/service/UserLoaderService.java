@@ -1,5 +1,6 @@
 package com.parc.api.service;
 
+import com.parc.api.security.CustomUserDetail;
 import com.parc.api.model.entity.Utilisateur;
 import com.parc.api.repository.UtilisateurRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,6 @@ public class UserLoaderService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Utilisateur utilisateur = this.utilisateurRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur ne correspond à cet identifiant"));
-        return new UserDetail(utilisateur);
+        return new CustomUserDetail(utilisateur);
     }
 }

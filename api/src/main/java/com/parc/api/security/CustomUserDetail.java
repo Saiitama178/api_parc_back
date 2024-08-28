@@ -1,4 +1,4 @@
-package com.parc.api.configuration;
+package com.parc.api.security;
 
 import com.parc.api.model.entity.Utilisateur;
 import lombok.RequiredArgsConstructor;

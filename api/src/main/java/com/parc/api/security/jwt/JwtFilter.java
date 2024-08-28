@@ -1,4 +1,4 @@
-package com.parc.api.configuration;
+package com.parc.api.security.jwt;
 
 import com.parc.api.service.JwtService;
 import com.parc.api.service.UserLoaderService;
