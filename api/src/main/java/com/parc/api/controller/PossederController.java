@@ -17,7 +17,7 @@ import java.util.List;
 @Tag(name = "posseder", description = "API pour gérer les associations entre réseaux sociaux et parcs")
 public class PossederController {
 
-    private final PossederService possederService;
+    private final PossederService possederService; ;
 
     @GetMapping
     @Operation(
@@ -35,7 +35,8 @@ public class PossederController {
 
     @GetMapping("/posseder/{id}")
     public ResponseEntity<PossederDto> getPossederById(@PathVariable Integer id) {
-        return this.possederService.getPossederById(id);    }
+        return this.possederService.getPossederById(id);
+    }
 
     @PostMapping("/posseder")
     public ResponseEntity<PossederDto> createPosseder(@RequestBody PossederDto possederDto) {

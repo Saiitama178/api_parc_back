@@ -58,62 +58,6 @@ public class UtilisateurController {
         return this.utilisateurService.getUtilisateurById(id);
     }
 
-    @Operation(summary = "Créer un utilisateur",
-            description = "Crée un nouvel utilisateur",
-            operationId = "utilisateurs",
-            responses = {
-                    @ApiResponse(responseCode = "201", description = "Utilisateur créé", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UtilisateurDto.class))),
-                    @ApiResponse(responseCode = "400", description = "Données invalides")
-            })
-    @PostMapping("/inscription")
-    public ResponseEntity<UtilisateurDto> createUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
-        return this.utilisateurService.createUtilisateur(utilisateurDto);
-    }
-
-    @Operation(summary = "Activer un utilisateur",
-            description = "Active un utilisateur basé sur le code d'activation",
-            operationId = "utilisateurs/activation",
-            responses = {
-                    @ApiResponse(responseCode = "204", description = "Activation réussie"),
-                    @ApiResponse(responseCode = "400", description = "Code d'activation invalide ou expiré"),
-                    @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
-            })
-    @PostMapping("/activation")
-    public void activation(@RequestBody Map<String, String> activation) {
-        this.utilisateurService.activation(activation);
-    }
-
-    @Operation(summary = "Connexion utilisateur",
-            description = "Authentifie un utilisateur et retourne un token JWT",
-            operationId = "utilisateurs/connexion",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Authentification réussie", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class))),
-                    @ApiResponse(responseCode = "400", description = "Informations d'identification invalides")
-            })
-    @PostMapping("/connexion")
-    public ResponseEntity<Map<String, String>> connexion(@RequestBody AuthentificationDTO authentificationDTO) {
-        try {
-            final Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authentificationDTO.email(), authentificationDTO.password())
-            );
-
-            if (authentication.isAuthenticated()) {
-
-                log.info("Authentification réussie");
-
-                String token = jwtService.generateToken(authentificationDTO.email());
-
-                return ResponseEntity.ok(Map.of("token", token));
-            } else {
-                log.info("Authentification échouée");
-                return ResponseEntity.badRequest().body(Map.of("error", "les informations d'identifications sont invalides "));
-            }
-        } catch (BadCredentialsException e) {
-            log.info("les informations d'identification invalides");
-            return ResponseEntity.badRequest().body(Map.of("error", "les informations d'identifications sont invalides"));
-        }
-    }
-
     @Operation(summary = "Supprimer un utilisateur",
             description = "Supprime un utilisateur basé sur son ID",
             operationId = "utilisateurs",

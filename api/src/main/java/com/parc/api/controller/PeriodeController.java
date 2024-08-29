@@ -1,9 +1,7 @@
 package com.parc.api.controller;
 
 import com.parc.api.model.dto.PeriodeDto;
-import com.parc.api.model.entity.Periode;
-import com.parc.api.model.mapper.PeriodeMapper;
-import com.parc.api.repository.PeriodeRepository;
+import com.parc.api.service.PeriodeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,12 +9,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -24,7 +20,7 @@ import java.util.Optional;
 @Tag(name = "periode", description = "Opérations sur les périodes")
 public class PeriodeController {
 
-    private final PeriodeRepository periodeRepository;
+    private final PeriodeService periodeService;
 
     @GetMapping("/periode")
     @Operation(
@@ -44,10 +40,7 @@ public class PeriodeController {
             }
     )
     public ResponseEntity<List<PeriodeDto>> getAllPeriode() {
-        List<Periode> periodeList = periodeRepository.findAll();
-        List<PeriodeDto> periodeDtoList = periodeList.stream()
-                .map(PeriodeMapper::toDto).toList();
-        return ResponseEntity.ok(periodeDtoList);
+        return this.periodeService.getAllPeriode();
     }
 
     @GetMapping("/periode/{id}")
@@ -69,13 +62,7 @@ public class PeriodeController {
     )
     public ResponseEntity<PeriodeDto> getPeriodeById(
             @Parameter(description = "ID de la période à récupérer") @PathVariable int id) {
-        Optional<Periode> periode = periodeRepository.findById(id);
-        if (periode.isPresent()) {
-            PeriodeDto periodeDto = PeriodeMapper.toDto(periode.get());
-            return ResponseEntity.ok(periodeDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.periodeService.getPeriodeById(id);
     }
 
     @PostMapping("/periode")
@@ -97,13 +84,7 @@ public class PeriodeController {
     )
     public ResponseEntity<PeriodeDto> createPeriodeByParc(
             @Parameter(description = "Détails de la période à créer") @RequestBody PeriodeDto periodeDto) {
-        if (periodeDto == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        Periode periode = PeriodeMapper.toEntity(periodeDto);
-        Periode savedPeriode = periodeRepository.save(periode);
-        PeriodeDto savedPeriodeDto = PeriodeMapper.toDto(savedPeriode);
-        return new ResponseEntity<>(savedPeriodeDto, HttpStatus.CREATED);
+        return this.periodeService.createPeriodeByParc(periodeDto);
     }
 
     @PutMapping("/periode/{id}")
@@ -127,21 +108,7 @@ public class PeriodeController {
     public ResponseEntity<PeriodeDto> updatePeriode(
             @Parameter(description = "ID de la période à mettre à jour") @PathVariable int id,
             @Parameter(description = "Nouvelles informations de la période") @RequestBody PeriodeDto periodeDto) {
-        Optional<Periode> foundPeriodeOptional = periodeRepository.findById(id);
-        if (foundPeriodeOptional.isPresent()) {
-            Periode foundPeriode = foundPeriodeOptional.get();
-            foundPeriode.setDateOuverture(periodeDto.getDateOuverturePeriode());
-            foundPeriode.setDateFermuture(periodeDto.getDateFermeturePeriode());
-            foundPeriode.setHeureOuverture(periodeDto.getHeureOuverturePeriode());
-            foundPeriode.setHeureFermeture(periodeDto.getHeureFermeturePeriode());
-            foundPeriode.setPrixAdulte(periodeDto.getPrixAdultePeriode());
-            foundPeriode.setPrixEnfant(periodeDto.getPrixEnfantPeriode());
-            Periode savedPeriode = periodeRepository.save(foundPeriode);
-            PeriodeDto updatedPeriodeDto = PeriodeMapper.toDto(savedPeriode);
-            return ResponseEntity.ok(updatedPeriodeDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.periodeService.updatePeriode(periodeDto, id);
     }
 
     @DeleteMapping("/periode/{id}")
@@ -156,12 +123,7 @@ public class PeriodeController {
     )
     public ResponseEntity<Void> deletePeriode(
             @Parameter(description = "ID de la période à supprimer") @PathVariable int id) {
-        Optional<Periode> periodeOptional = periodeRepository.findById(id);
-        if (periodeOptional.isPresent()) {
-            periodeRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.periodeService.deletePeriode(id);
     }
 }
+

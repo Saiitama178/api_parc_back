@@ -1,17 +1,13 @@
 package com.parc.api.controller;
 
 import com.parc.api.model.dto.ClasserDto;
-import com.parc.api.model.entity.*;
-import com.parc.api.model.mapper.ClasserMapper;
-import com.parc.api.repository.*;
+import com.parc.api.service.ClasserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +20,7 @@ import java.util.Optional;
 @Tag(name = "classer", description = "Opérations liées aux classes")
 public class ClasserController {
 
-    private final ClasserRepository classerRepository;
+    private final ClasserService classerService;
 
     @GetMapping
     @Operation(
@@ -44,10 +40,7 @@ public class ClasserController {
             }
     )
     public ResponseEntity<List<ClasserDto>> getAllClasser() {
-        List<Classer> classerList = classerRepository.findAll();
-        List<ClasserDto> classerDtos = classerList.stream()
-                .map(ClasserMapper::toDto).toList();
-        return ResponseEntity.ok(classerDtos);
+        return (ResponseEntity<List<ClasserDto>>) this.classerService.getAllClassers();
     }
 
     @GetMapping("/{id}")
@@ -67,11 +60,8 @@ public class ClasserController {
                     @ApiResponse(responseCode = "404", description = "Classer non trouvé")
             }
     )
-    public ResponseEntity<ClasserDto> getClasserById(
-            @Parameter(description = "ID du classer à récupérer") @PathVariable Integer id) {
-        Optional<Classer> classer = classerRepository.findById(id);
-        return classer.map(classerEntity -> ResponseEntity.ok(ClasserMapper.toDto(classerEntity)))
-                .orElse(ResponseEntity.notFound().build());
+    public Optional<ClasserDto> getClasserById(@PathVariable Integer id) {
+        return this.classerService.getClasserById(id);
     }
 
     @PostMapping
@@ -91,15 +81,8 @@ public class ClasserController {
                     @ApiResponse(responseCode = "400", description = "Requête invalide")
             }
     )
-    public ResponseEntity<ClasserDto> createClasser(
-            @Parameter(description = "Détails du classer à créer") @RequestBody ClasserDto classerDto) {
-        if (classerDto == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        Classer classer = ClasserMapper.toEntity(classerDto);
-        Classer savedClasser = classerRepository.save(classer);
-        ClasserDto savedClasserDto = ClasserMapper.toDto(savedClasser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedClasserDto);
+    public ClasserDto createClasser(@RequestBody ClasserDto classerDto) {
+        return this.classerService.createClasser(classerDto);
     }
 
     @DeleteMapping("/{id}")
@@ -115,15 +98,8 @@ public class ClasserController {
                     @ApiResponse(responseCode = "404", description = "Classer non trouvé")
             }
     )
-    public ResponseEntity<Void> deleteClasser(
-            @Parameter(description = "ID du classer à supprimer") @PathVariable Integer id) {
-        Optional<Classer> classerOptional = classerRepository.findById(id);
-        if (classerOptional.isPresent()) {
-            classerRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public boolean deleteClasser(@PathVariable Integer id) {
+        return this.classerService.deleteClasser(id);
     }
 
     @PutMapping("/{id}")
@@ -144,17 +120,7 @@ public class ClasserController {
                     @ApiResponse(responseCode = "400", description = "Données invalides")
             }
     )
-    public ResponseEntity<ClasserDto> updateClasser(
-            @Parameter(description = "ID du classer à mettre à jour") @PathVariable Integer id,
-            @Parameter(description = "Nouvelles informations du classer") @RequestBody ClasserDto classerDto) {
-        Optional<Classer> existingClasserOptional = classerRepository.findById(id);
-        if (existingClasserOptional.isPresent()) {
-            Classer existingClasser = existingClasserOptional.get();
-            existingClasser = classerRepository.save(existingClasser);
-            ClasserDto updatedClasserDto = ClasserMapper.toDto(existingClasser);
-            return ResponseEntity.ok(updatedClasserDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public Optional<ClasserDto> updateClasser(@PathVariable Integer id) {
+        return this.classerService.updateClasser(id);
     }
 }

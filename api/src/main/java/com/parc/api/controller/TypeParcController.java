@@ -1,22 +1,17 @@
 package com.parc.api.controller;
 
 import com.parc.api.model.dto.TypeParcDto;
-import com.parc.api.model.entity.TypeParc;
-import com.parc.api.model.mapper.TypeParcMapper;
-import com.parc.api.repository.TypeParcRepository;
+import com.parc.api.service.TypeParcService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -24,7 +19,7 @@ import java.util.stream.Collectors;
 @Tag(name = "type-parc", description = "Opérations sur les types de parc")
 public class TypeParcController {
 
-    private final TypeParcRepository typeParcRepository;
+    private final TypeParcService typeParcService;
 
     @GetMapping("/typeParc")
     @Operation(
@@ -36,11 +31,7 @@ public class TypeParcController {
                     @ApiResponse(responseCode = "500", description = "Erreur serveur interne")
             })
     public ResponseEntity<List<TypeParcDto>> getTypeParc() {
-        List<TypeParc> typeParcs = typeParcRepository.findAll();
-        List<TypeParcDto> typeParcDtos = typeParcs.stream()
-                .map(TypeParcMapper::toDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(typeParcDtos);
+        return this.typeParcService.getTypeParc();
     }
 
     @GetMapping("/typeParc/{id}")
@@ -53,10 +44,7 @@ public class TypeParcController {
                     @ApiResponse(responseCode = "404", description = "Type de parc non trouvé")
             })
     public ResponseEntity<TypeParcDto> getTypeParcById(@PathVariable Integer id) {
-        Optional<TypeParc> typeParc = typeParcRepository.findById(id);
-        return typeParc
-                .map(typeParcEntity -> ResponseEntity.ok(TypeParcMapper.toDto(typeParcEntity)))
-                .orElse(ResponseEntity.notFound().build());
+        return this.typeParcService.getTypeParcById(id);
     }
 
     @PostMapping("/typeParc")
@@ -69,13 +57,7 @@ public class TypeParcController {
                     @ApiResponse(responseCode = "400", description = "Requête invalide")
             })
     public ResponseEntity<TypeParcDto> createTypeParc(@RequestBody TypeParcDto typeParcDto) {
-        if (typeParcDto == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        TypeParc typeParc = TypeParcMapper.toEntity(typeParcDto);
-        TypeParc savedTypeParc = typeParcRepository.save(typeParc);
-        TypeParcDto savedTypeParcDto = TypeParcMapper.toDto(savedTypeParc);
-        return new ResponseEntity<>(savedTypeParcDto, HttpStatus.CREATED);
+        return this.typeParcService.createTypeImage(typeParcDto);
     }
 
     @DeleteMapping("/typeParc/{id}")
@@ -88,13 +70,7 @@ public class TypeParcController {
                     @ApiResponse(responseCode = "404", description = "Type de parc non trouvé")
             })
     public ResponseEntity<Void> deleteTypeParc(@PathVariable Integer id) {
-        Optional<TypeParc> typeParcOptional = typeParcRepository.findById(id);
-        if (typeParcOptional.isPresent()) {
-            typeParcRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.typeParcService.deleteTypeImage(id);
     }
 
     @PutMapping("/typeParc/{id}")
@@ -108,16 +84,7 @@ public class TypeParcController {
                     @ApiResponse(responseCode = "400", description = "Données invalides")
             })
     public ResponseEntity<TypeParcDto> updateTypeParc(@PathVariable Integer id, @RequestBody TypeParcDto typeParcDto) {
-        Optional<TypeParc> foundTypeParcOptional = typeParcRepository.findById(id);
-        if (foundTypeParcOptional.isPresent()) {
-            TypeParc foundTypeParc = foundTypeParcOptional.get();
-            foundTypeParc.setLibelleTypeParc(typeParcDto.getLibelleTypeParc());
-            TypeParc savedTypeParc = typeParcRepository.save(foundTypeParc);
-            TypeParcDto updatedTypeParcDto = TypeParcMapper.toDto(savedTypeParc);
-            return ResponseEntity.ok(updatedTypeParcDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.typeParcService.updateTypeImage(id, typeParcDto);
     }
 }
 

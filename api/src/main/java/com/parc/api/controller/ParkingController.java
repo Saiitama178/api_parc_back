@@ -1,9 +1,7 @@
 package com.parc.api.controller;
 
 import com.parc.api.model.dto.ParkingDto;
-import com.parc.api.model.entity.Parking;
-import com.parc.api.model.mapper.ParkingMapper;
-import com.parc.api.repository.ParkingRepository;
+import com.parc.api.service.ParkingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,12 +9,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -24,7 +20,7 @@ import java.util.Optional;
 @Tag(name = "parking", description = "Opérations liées aux parkings")
 public class ParkingController {
 
-    private final ParkingRepository parkingRepository;
+    private final ParkingService parkingService;
 
     @GetMapping
     @Operation(
@@ -44,10 +40,7 @@ public class ParkingController {
             }
     )
     public ResponseEntity<List<ParkingDto>> getAllParking() {
-        List<Parking> parkingList = parkingRepository.findAll();
-        List<ParkingDto> parkingDtoList = parkingList.stream()
-                .map(ParkingMapper::toDto).toList();
-        return ResponseEntity.ok(parkingDtoList);
+        return this.parkingService.getAllParking();
     }
 
     @GetMapping("/{id}")
@@ -69,13 +62,7 @@ public class ParkingController {
     )
     public ResponseEntity<ParkingDto> getParkingById(
             @Parameter(description = "ID du parking à récupérer") @PathVariable int id) {
-        Optional<Parking> parking = parkingRepository.findById(id);
-        if (parking.isPresent()) {
-            ParkingDto parkingDto = ParkingMapper.toDto(parking.get());
-            return ResponseEntity.ok(parkingDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.parkingService.getParkingById(id);
     }
 
     @PostMapping
@@ -97,10 +84,7 @@ public class ParkingController {
     )
     public ResponseEntity<ParkingDto> createParking(
             @Parameter(description = "Détails du parking à créer") @RequestBody ParkingDto parkingDto) {
-        Parking parking = ParkingMapper.toEntity(parkingDto);
-        Parking savedParking = parkingRepository.save(parking);
-        ParkingDto savedParkingDto = ParkingMapper.toDto(savedParking);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedParkingDto);
+        return this.parkingService.createParking(parkingDto);
     }
 
     @PutMapping("/{id}")
@@ -124,16 +108,7 @@ public class ParkingController {
     public ResponseEntity<ParkingDto> updateParking(
             @Parameter(description = "ID du parking à mettre à jour") @PathVariable int id,
             @Parameter(description = "Nouvelles informations du parking") @RequestBody ParkingDto parkingDto) {
-        Optional<Parking> foundParkingOptional = parkingRepository.findById(id);
-        if (foundParkingOptional.isPresent()) {
-            Parking foundParking = foundParkingOptional.get();
-            foundParking.setLibParking(parkingDto.getLibParking());
-            Parking savedParking = parkingRepository.save(foundParking);
-            ParkingDto updatedParkingDto = ParkingMapper.toDto(savedParking);
-            return ResponseEntity.ok(updatedParkingDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.parkingService.updateParking(id, parkingDto);
     }
 
     @DeleteMapping("/{id}")
@@ -148,12 +123,6 @@ public class ParkingController {
     )
     public ResponseEntity<Void> deleteParking(
             @Parameter(description = "ID du parking à supprimer") @PathVariable int id) {
-        Optional<Parking> parkingOptional = parkingRepository.findById(id);
-        if (parkingOptional.isPresent()) {
-            parkingRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.parkingService.deleteParking(id);
     }
 }

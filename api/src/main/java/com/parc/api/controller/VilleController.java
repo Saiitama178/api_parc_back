@@ -4,6 +4,7 @@ import com.parc.api.model.dto.VilleDto;
 import com.parc.api.model.entity.Ville;
 import com.parc.api.model.mapper.VilleMapper;
 import com.parc.api.repository.VilleRepository;
+import com.parc.api.service.VilleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 @Tag(name = "ville", description = "Opérations sur les villes")
 public class VilleController {
 
-    private final VilleRepository villeRepository;
+    private final VilleService villeService;
 
     @GetMapping("/ville")
     @Operation(
@@ -36,11 +37,7 @@ public class VilleController {
                     @ApiResponse(responseCode = "500", description = "Erreur serveur interne")
             })
     public ResponseEntity<List<VilleDto>> getAllVilles() {
-        List<Ville> villes = villeRepository.findAll();
-        List<VilleDto> villeDto = villes.stream()
-                .map(VilleMapper::toDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(villeDto);
+        return this.villeService.getAllVilles();
     }
 
     @GetMapping("/ville/{id}")
@@ -53,10 +50,7 @@ public class VilleController {
                     @ApiResponse(responseCode = "404", description = "Ville non trouvée")
             })
     public ResponseEntity<VilleDto> getVilleById(@PathVariable Integer id) {
-        Optional<Ville> ville = villeRepository.findById(id);
-        return ville
-                .map(villeEntity -> ResponseEntity.ok(VilleMapper.toDto(villeEntity)))
-                .orElse(ResponseEntity.notFound().build());
+        return this.villeService.getVilleById(id);
     }
 
     @DeleteMapping("/ville/{id}")
@@ -69,13 +63,7 @@ public class VilleController {
                     @ApiResponse(responseCode = "404", description = "Ville non trouvée")
             })
     public ResponseEntity<Void> deleteVille(@PathVariable Integer id) {
-        Optional<Ville> villeOptional = villeRepository.findById(id);
-        if (villeOptional.isPresent()) {
-            villeRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.villeService.deleteVille(id);
     }
 
     @PutMapping("/ville/{id}")
@@ -89,17 +77,7 @@ public class VilleController {
                     @ApiResponse(responseCode = "400", description = "Données invalides")
             })
     public ResponseEntity<VilleDto> updateVille(@PathVariable Integer id, @RequestBody VilleDto villeDto) {
-        Optional<Ville> foundVilleOptional = villeRepository.findById(id);
-        if (foundVilleOptional.isPresent()) {
-            Ville foundVille = foundVilleOptional.get();
-            foundVille.setNomVille(villeDto.getNomVille());
-            foundVille.setCodePostal(villeDto.getCodePostal());
-            Ville savedVille = villeRepository.save(foundVille);
-            VilleDto updatedVilleDto = VilleMapper.toDto(savedVille);
-            return ResponseEntity.ok(updatedVilleDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.villeService.updateVille(id, villeDto);
     }
 
     @PostMapping("/ville")
@@ -112,13 +90,7 @@ public class VilleController {
                     @ApiResponse(responseCode = "400", description = "Requête invalide")
             })
     public ResponseEntity<VilleDto> createVille(@RequestBody VilleDto villeDto) {
-        if (villeDto == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        Ville ville = VilleMapper.toEntity(villeDto);
-        Ville savedVille = villeRepository.save(ville);
-        VilleDto savedVilleDto = VilleMapper.toDto(savedVille);
-        return new ResponseEntity<>(savedVilleDto, HttpStatus.CREATED);
+        return this.villeService.createVillebyRegion(villeDto);
     }
 }
 

@@ -9,14 +9,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-
 
 @RestController
 @AllArgsConstructor
@@ -44,8 +40,7 @@ public class PaysController {
             }
     )
     public ResponseEntity<List<PaysDto>> getAllPays() {
-        List<PaysDto> paysDto = paysService.getAllPays();
-        return ResponseEntity.ok(paysDto);
+        return this.paysService.getAllPays();
     }
 
     @GetMapping("/{id}")
@@ -67,9 +62,7 @@ public class PaysController {
     )
     public ResponseEntity<PaysDto> getPaysById(
             @Parameter(description = "ID du pays à récupérer") @PathVariable Integer id) {
-        Optional<PaysDto> paysDto = paysService.getPaysById(id);
-        return paysDto.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return this.paysService.getPaysById(id);
     }
 
     @PostMapping
@@ -91,8 +84,7 @@ public class PaysController {
     )
     public ResponseEntity<PaysDto> createPays(
             @Parameter(description = "Détails du pays à créer") @RequestBody PaysDto paysDto) {
-        PaysDto createdPaysDto = paysService.createPays(paysDto);
-        return new ResponseEntity<>(createdPaysDto, HttpStatus.CREATED);
+        return this.paysService.createPay(paysDto);
     }
 
     @DeleteMapping("/{id}")
@@ -107,8 +99,7 @@ public class PaysController {
     )
     public ResponseEntity<Void> deletePays(
             @Parameter(description = "ID du pays à supprimer") @PathVariable Integer id) {
-        paysService.deletePays(id);
-        return ResponseEntity.noContent().build();
+        return this.paysService.deletePay(id);
     }
 
     @PutMapping("/{id}")
@@ -132,9 +123,7 @@ public class PaysController {
     public ResponseEntity<PaysDto> updatePays(
             @Parameter(description = "ID du pays à mettre à jour") @PathVariable Integer id,
             @Parameter(description = "Nouvelles informations du pays") @RequestBody PaysDto paysDto) {
-        PaysDto updatedPaysDto = paysService.updatePays(id, paysDto);
-        return updatedPaysDto != null ? ResponseEntity.ok(updatedPaysDto) :
-                ResponseEntity.notFound().build();
+        return this.paysService.updatePays(id, paysDto);
     }
 }
 

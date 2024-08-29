@@ -2,9 +2,7 @@ package com.parc.api.controller;
 
 
 import com.parc.api.model.dto.EnregistrerDto;
-import com.parc.api.model.entity.Enregistrer;
-import com.parc.api.model.mapper.EnregistrerMapper;
-import com.parc.api.repository.EnregistrerRepository;
+import com.parc.api.service.EnregistrerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,12 +10,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -25,7 +21,7 @@ import java.util.Optional;
 @Tag(name = "enregistrer", description = "Opérations liées à l'entité Enregistrer")
 public class EnregistrerController {
 
-    private final EnregistrerRepository enregistrerRepository;
+    private final EnregistrerService enregistrerService;
 
     @GetMapping
     @Operation(
@@ -45,10 +41,7 @@ public class EnregistrerController {
             }
     )
     public ResponseEntity<List<EnregistrerDto>> getAllEnregistrer() {
-        List<Enregistrer> enregistrerList = enregistrerRepository.findAll();
-        List<EnregistrerDto> enregistrerDto = enregistrerList.stream()
-                .map(EnregistrerMapper::toDto).toList();
-        return ResponseEntity.ok(enregistrerDto);
+        return this.enregistrerService.getAllEnregistrer();
     }
 
     @GetMapping("/{id}")
@@ -70,13 +63,7 @@ public class EnregistrerController {
     )
     public ResponseEntity<EnregistrerDto> getEnregistrerById(
             @Parameter(description = "ID de l'entrée à récupérer") @PathVariable Integer id) {
-        Optional<Enregistrer> enregistrer = enregistrerRepository.findById(id);
-        if (enregistrer.isPresent()) {
-            EnregistrerDto enregistrerDto = EnregistrerMapper.toDto(enregistrer.get());
-            return ResponseEntity.ok(enregistrerDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.enregistrerService.getEnregistrerById(id);
     }
 
     @PostMapping
@@ -98,13 +85,7 @@ public class EnregistrerController {
     )
     public ResponseEntity<EnregistrerDto> createEnregistrer(
             @Parameter(description = "Détails de l'entrée à créer") @RequestBody EnregistrerDto enregistrerDto) {
-        if (enregistrerDto == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        Enregistrer enregistrer = EnregistrerMapper.toEntity(enregistrerDto);
-        Enregistrer savedEnregistrer = enregistrerRepository.save(enregistrer);
-        EnregistrerDto savedEnregistrerDto = EnregistrerMapper.toDto(savedEnregistrer);
-        return new ResponseEntity<>(savedEnregistrerDto, HttpStatus.CREATED);
+        return this.enregistrerService.createEnregistrer(enregistrerDto);
     }
 
     @PutMapping("/{id}")
@@ -128,14 +109,7 @@ public class EnregistrerController {
     public ResponseEntity<EnregistrerDto> updateEnregistrer(
             @Parameter(description = "ID de l'entrée à mettre à jour") @PathVariable Integer id,
             @Parameter(description = "Nouvelles informations de l'entrée") @RequestBody EnregistrerDto enregistrerDto) {
-        Optional<Enregistrer> existingEnregistrer = enregistrerRepository.findById(id);
-        if (existingEnregistrer.isPresent()) {
-            Enregistrer enregistrer = existingEnregistrer.get();
-            enregistrer = enregistrerRepository.save(enregistrer);
-            return ResponseEntity.ok(EnregistrerMapper.toDto(enregistrer));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.enregistrerService.updateEnregistrer(id, enregistrerDto);
     }
 
     @DeleteMapping("/{id}")
@@ -150,13 +124,7 @@ public class EnregistrerController {
     )
     public ResponseEntity<Void> deleteEnregistrer(
             @Parameter(description = "ID de l'entrée à supprimer") @PathVariable Integer id) {
-        Optional<Enregistrer> enregistrerOptional = enregistrerRepository.findById(id);
-        if (enregistrerOptional.isPresent()) {
-            enregistrerRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.enregistrerService.deleteEnregistrer(id);
     }
 }
 

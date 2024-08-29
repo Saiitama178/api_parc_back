@@ -1,9 +1,7 @@
 package com.parc.api.controller;
 
 import com.parc.api.model.dto.ImageDto;
-import com.parc.api.model.entity.Image;
-import com.parc.api.model.mapper.ImageMapper;
-import com.parc.api.repository.ImageRepository;
+import com.parc.api.service.ImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,12 +9,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -24,7 +20,7 @@ import java.util.Optional;
 @Tag(name = "image", description = "Opérations liées aux images")
 public class ImageController {
 
-    private final ImageRepository imageRepository;
+    private final ImageService imageService;
 
     @GetMapping
     @Operation(
@@ -44,10 +40,7 @@ public class ImageController {
             }
     )
     public ResponseEntity<List<ImageDto>> getAllImages() {
-        List<Image> imageList = imageRepository.findAll();
-        List<ImageDto> imageDtoList = imageList.stream()
-                .map(ImageMapper::toDto).toList();
-        return ResponseEntity.ok(imageDtoList);
+        return this.imageService.getAllImages();
     }
 
     @GetMapping("/{id}")
@@ -69,13 +62,7 @@ public class ImageController {
     )
     public ResponseEntity<ImageDto> getImageById(
             @Parameter(description = "ID de l'image à récupérer") @PathVariable int id) {
-        Optional<Image> imageOptional = imageRepository.findById(id);
-        if (imageOptional.isPresent()) {
-            ImageDto imageDto = ImageMapper.toDto(imageOptional.get());
-            return ResponseEntity.ok(imageDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.imageService.getImageById(id);
     }
 
     @PostMapping
@@ -96,14 +83,8 @@ public class ImageController {
             }
     )
     public ResponseEntity<ImageDto> createImage(
-            @Parameter(description = "Détails de l'image à créer") @RequestBody ImageDto imageDto) {
-        if (imageDto == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        Image image = ImageMapper.toEntity(imageDto);
-        Image savedImage = imageRepository.save(image);
-        ImageDto savedImageDto = ImageMapper.toDto(savedImage);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedImageDto);
+            @Parameter(description = "Détails de l'image à créer") @RequestBody ImageDto imageDto, @PathVariable("idTypeImage") int idTypeImage, @PathVariable("idParc") int idParc) throws Exception{
+        return this.imageService.createImage(imageDto, idTypeImage, idParc);
     }
 
     @PutMapping("/{id}")
@@ -127,16 +108,7 @@ public class ImageController {
     public ResponseEntity<ImageDto> updateImage(
             @Parameter(description = "ID de l'image à mettre à jour") @PathVariable int id,
             @Parameter(description = "Nouvelles informations de l'image") @RequestBody ImageDto imageDto) {
-        Optional<Image> foundImageOptional = imageRepository.findById(id);
-        if (foundImageOptional.isPresent()) {
-            Image foundImage = foundImageOptional.get();
-            foundImage.setRefImage(imageDto.getRefImage());
-            Image savedImage = imageRepository.save(foundImage);
-            ImageDto updatedImageDto = ImageMapper.toDto(savedImage);
-            return ResponseEntity.ok(updatedImageDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.imageService.updateImage(id, imageDto);
     }
 
     @DeleteMapping("/{id}")
@@ -149,14 +121,8 @@ public class ImageController {
                     @ApiResponse(responseCode = "404", description = "Image non trouvée")
             }
     )
-    public ResponseEntity<Void> deleteImage(
+    public ResponseEntity<ImageDto> deleteImage(
             @Parameter(description = "ID de l'image à supprimer") @PathVariable int id) {
-        Optional<Image> imageOptional = imageRepository.findById(id);
-        if (imageOptional.isPresent()) {
-            imageRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.imageService.deleteImage(id);
     }
 }

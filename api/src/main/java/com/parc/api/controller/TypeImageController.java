@@ -2,21 +2,17 @@ package com.parc.api.controller;
 
 
 import com.parc.api.model.dto.TypeImageDto;
-import com.parc.api.model.entity.TypeImage;
-import com.parc.api.model.mapper.TypeImageMapper;
-import com.parc.api.repository.TypeImageRepository;
+import com.parc.api.service.TypeImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -24,7 +20,7 @@ import java.util.Optional;
 @Tag(name = "type-Image", description = "Opérations sur les types d'image")
 public class TypeImageController {
 
-    private final TypeImageRepository typeImageRepository;
+    private final TypeImageService typeImageService;
 
     @GetMapping("/typeImage")
     @Operation(
@@ -44,10 +40,7 @@ public class TypeImageController {
             }
     )
     public ResponseEntity<List<TypeImageDto>> getAllTypeImage() {
-        List<TypeImage> typeImages = typeImageRepository.findAll();
-        List<TypeImageDto> typeImageDtos = typeImages.stream()
-                .map(TypeImageMapper::toDto).toList();
-        return ResponseEntity.ok(typeImageDtos);
+        return typeImageService.getAllTypeImage();
     }
 
     @GetMapping("/typeImage/{id}")
@@ -68,10 +61,7 @@ public class TypeImageController {
             }
     )
     public ResponseEntity<TypeImageDto> getTypeImageById(@PathVariable Integer id) {
-        Optional<TypeImage> typeImage = typeImageRepository.findById(id);
-        return typeImage
-                .map(typeImageEntity -> ResponseEntity.ok(TypeImageMapper.toDto(typeImageEntity)))
-                .orElse(ResponseEntity.notFound().build());
+        return typeImageService.getTypeImageById(id);
     }
 
     @PostMapping("/typeImage")
@@ -92,13 +82,7 @@ public class TypeImageController {
             }
     )
     public ResponseEntity<TypeImageDto> createTypeImage(@RequestBody TypeImageDto typeImageDto) {
-        if (typeImageDto == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        TypeImage typeImage = TypeImageMapper.toEntity(typeImageDto);
-        TypeImage savedTypeImage = typeImageRepository.save(typeImage);
-        TypeImageDto savedTypeImageDto = TypeImageMapper.toDto(savedTypeImage);
-        return new ResponseEntity<>(savedTypeImageDto, HttpStatus.CREATED);
+        return typeImageService.createTypeImage(typeImageDto);
     }
 
     @DeleteMapping("/typeImage/{id}")
@@ -112,13 +96,7 @@ public class TypeImageController {
             }
     )
     public ResponseEntity<Void> deleteTypeImage(@PathVariable Integer id) {
-        Optional<TypeImage> typeImageOptional = typeImageRepository.findById(id);
-        if (typeImageOptional.isPresent()) {
-            typeImageRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return typeImageService.deleteTypeImage(id);
     }
 
     @PutMapping("/typeImage/{id}")
@@ -140,16 +118,7 @@ public class TypeImageController {
             }
     )
     public ResponseEntity<TypeImageDto> updateTypeImage(@PathVariable Integer id, @RequestBody TypeImageDto typeImageDto) {
-        Optional<TypeImage> foundTypeImageOptional = typeImageRepository.findById(id);
-        if (foundTypeImageOptional.isPresent()) {
-            TypeImage foundTypeImage = foundTypeImageOptional.get();
-            foundTypeImage.setLibTypeImage(typeImageDto.getLibTypeImage());
-            TypeImage savedTypeImage = typeImageRepository.save(foundTypeImage);
-            TypeImageDto updatedTypeImageDto = TypeImageMapper.toDto(savedTypeImage);
-            return ResponseEntity.ok(updatedTypeImageDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return typeImageService.updateTypeImage(id, typeImageDto);
     }
 }
 

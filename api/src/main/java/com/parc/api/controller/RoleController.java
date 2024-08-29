@@ -1,21 +1,17 @@
 package com.parc.api.controller;
 
 import com.parc.api.model.dto.RoleDto;
-import com.parc.api.model.entity.Role;
-import com.parc.api.model.mapper.RoleMapper;
-import com.parc.api.repository.RoleRepository;
+import com.parc.api.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -23,7 +19,7 @@ import java.util.Optional;
 @Tag(name = "role", description = "Opérations sur les rôles")
 public class RoleController {
 
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
 
     @GetMapping("/role")
     @Operation(
@@ -43,10 +39,7 @@ public class RoleController {
             }
     )
     public ResponseEntity<List<RoleDto>> getAllRole() {
-        List<Role> roleList = roleRepository.findAll();
-        List<RoleDto> roleDtoList = roleList.stream()
-                .map(RoleMapper::toDto).toList();
-        return ResponseEntity.ok(roleDtoList);
+        return this.roleService.getAllRole();
     }
 
     @GetMapping("/role/{id}")
@@ -67,10 +60,7 @@ public class RoleController {
             }
     )
     public ResponseEntity<RoleDto> getRoleById(@PathVariable int id) {
-        Optional<Role> role = roleRepository.findById(id);
-        return role
-                .map(roleEntity -> ResponseEntity.ok(RoleMapper.toDto(roleEntity)))
-                .orElse(ResponseEntity.notFound().build());
+        return this.roleService.getRoleById(id);
     }
 
     @PostMapping("/role")
@@ -91,10 +81,7 @@ public class RoleController {
             }
     )
     public ResponseEntity<RoleDto> createRole(@RequestBody RoleDto roleDto) {
-        Role role = RoleMapper.toEntity(roleDto);
-        Role savedRole = roleRepository.save(role);
-        RoleDto savedRoleDto = RoleMapper.toDto(savedRole);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedRoleDto);
+        return this.roleService.createRole(roleDto);
     }
 
     @PutMapping("/role/{id}")
@@ -116,16 +103,7 @@ public class RoleController {
             }
     )
     public ResponseEntity<RoleDto> updateRole(@PathVariable int id, @RequestBody RoleDto roleDto) {
-        Optional<Role> foundRoleOptional = roleRepository.findById(id);
-        if (foundRoleOptional.isPresent()) {
-            Role foundRole = foundRoleOptional.get();
-            foundRole.setLibRole(roleDto.getLibRole());
-            Role savedRole = roleRepository.save(foundRole);
-            RoleDto updatedRoleDto = RoleMapper.toDto(savedRole);
-            return ResponseEntity.ok(updatedRoleDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.roleService.updateRole(id, roleDto);
     }
 
     @DeleteMapping("/role/{id}")
@@ -139,13 +117,7 @@ public class RoleController {
             }
     )
     public ResponseEntity<Void> deleteRole(@PathVariable int id) {
-        Optional<Role> roleOptional = roleRepository.findById(id);
-        if (roleOptional.isPresent()) {
-            roleRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.roleService.deleteRole(id);
     }
 }
 
