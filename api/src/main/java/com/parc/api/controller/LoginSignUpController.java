@@ -68,7 +68,7 @@ public class LoginSignUpController {
                     @ApiResponse(responseCode = "400", description = "Données invalides")
             })
     @PostMapping("/inscription")
-    public ResponseEntity<UtilisateurDto> createUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
+    public ResponseEntity<UtilisateurDto> inscription(@RequestBody UtilisateurDto utilisateurDto) {
         return this.utilisateurService.createUtilisateur(utilisateurDto);
     }
 
