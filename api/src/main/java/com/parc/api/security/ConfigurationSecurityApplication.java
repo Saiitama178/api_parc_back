@@ -34,11 +34,33 @@ public class ConfigurationSecurityApplication {
                 httpSecurity
                         .csrf(AbstractHttpConfigurer::disable) // consider enabling CSRF protection
                         .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers(POST).permitAll()
-                                .requestMatchers(GET).permitAll()
-                                .requestMatchers(PUT).permitAll()
-                                .requestMatchers(DELETE).permitAll()
+
+                                // Routes publiques pour inscription, connexion, et activation de compte
+                                .requestMatchers(POST, "/auth/inscription").permitAll() // Inscription
+                                .requestMatchers(POST, "/auth/connexion").permitAll() // Connexion
+                                .requestMatchers(GET, "/auth/activation").permitAll() // Activation de compte
+
+                                // Routes accessibles uniquement aux administrateurs
+                                .requestMatchers(POST, "/parcs").hasRole("Administrateur")
+                                .requestMatchers(PUT, "/parcs/{id}").hasRole("Administrateur")
+                                .requestMatchers(DELETE, "/parcs/{id}").hasRole("Administrateur")
+                                .requestMatchers(POST, "/parcs/{id}/images").hasRole("Administrateur")
+                                .requestMatchers(DELETE, "/parcs/{parcId}/images/{imageId}").hasRole("Administrateur")
+                                .requestMatchers(POST, "/users").hasRole("Administrateur")
+                                .requestMatchers(PUT, "/users/{id}").hasRole("Administrateur")
+                                .requestMatchers(DELETE, "/users/{id}").hasRole("Administrateur")
+
+                                // Routes accessibles à tous (public) ou aux utilisateurs authentifiés
+                                .requestMatchers(GET, "/parcs").permitAll() // Liste des parcs
+                                .requestMatchers(GET, "/parcs/{nomParc}").permitAll() // Détails d'un parc
+                                .requestMatchers(GET, "/parcs?ville={ville}&region={region}&pays={pays}").permitAll() // Filtrage des parcs
+                                .requestMatchers(POST, "/parcs/{id}/commentaires").authenticated() // Commentaires
+                                .requestMatchers(POST, "/parcs/{id}/notes").authenticated() // Noter un parc
+
+                                // Swagger et API documentation accessibles à tous
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+                                // Toute autre requête doit être authentifiée
                                 .anyRequest().authenticated()
                         )
                         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
