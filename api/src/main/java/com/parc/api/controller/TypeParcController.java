@@ -21,7 +21,7 @@ public class TypeParcController {
 
     private final TypeParcService typeParcService;
 
-    @GetMapping("/typeParc")
+    @GetMapping
     @Operation(
             summary = "Affiche la liste des types de parc",
             description = "Retourne une liste de tous les types de parc.",
@@ -34,7 +34,7 @@ public class TypeParcController {
         return this.typeParcService.getTypeParc();
     }
 
-    @GetMapping("/typeParc/{id}")
+    @GetMapping("/{id}")
     @Operation(
             summary = "Affiche un type de parc par ID",
             description = "Retourne un type de parc basé sur son ID.",
@@ -47,7 +47,7 @@ public class TypeParcController {
         return this.typeParcService.getTypeParcById(id);
     }
 
-    @PostMapping("/typeParc")
+    @PostMapping
     @Operation(
             summary = "Crée un nouveau type de parc",
             description = "Ajoute un nouveau type de parc à la base de données.",
@@ -60,20 +60,9 @@ public class TypeParcController {
         return this.typeParcService.createTypeImage(typeParcDto);
     }
 
-    @DeleteMapping("/typeParc/{id}")
-    @Operation(
-            summary = "Supprime un type de parc",
-            description = "Supprime un type de parc basé sur son ID.",
-            operationId = "type-parc",
-            responses = {
-                    @ApiResponse(responseCode = "204", description = "Type de parc supprimé"),
-                    @ApiResponse(responseCode = "404", description = "Type de parc non trouvé")
-            })
-    public ResponseEntity<Void> deleteTypeParc(@PathVariable Integer id) {
-        return this.typeParcService.deleteTypeImage(id);
-    }
 
-    @PutMapping("/typeParc/{id}")
+
+    @PutMapping("/{id}")
     @Operation(
             summary = "Met à jour un type de parc",
             description = "Met à jour les informations d'un type de parc existant basé sur son ID.",
@@ -85,6 +74,19 @@ public class TypeParcController {
             })
     public ResponseEntity<TypeParcDto> updateTypeParc(@PathVariable Integer id, @RequestBody TypeParcDto typeParcDto) {
         return this.typeParcService.updateTypeImage(id, typeParcDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Supprime un type de parc",
+            description = "Supprime un type de parc basé sur son ID.",
+            operationId = "type-parc",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Type de parc supprimé"),
+                    @ApiResponse(responseCode = "404", description = "Type de parc non trouvé")
+            })
+    public ResponseEntity<Void> deleteTypeParc(@PathVariable Integer id) {
+        return this.typeParcService.deleteTypeImage(id);
     }
 }
 

@@ -22,7 +22,7 @@ public class PeriodeController {
 
     private final PeriodeService periodeService;
 
-    @GetMapping("/periode")
+    @GetMapping
     @Operation(
             summary = "Affiche la liste des périodes",
             description = "Retourne une liste de toutes les périodes.",
@@ -43,7 +43,7 @@ public class PeriodeController {
         return this.periodeService.getAllPeriode();
     }
 
-    @GetMapping("/periode/{id}")
+    @GetMapping("/{id}")
     @Operation(
             summary = "Affiche une période par ID",
             description = "Retourne une période basée sur son ID.",
@@ -65,7 +65,7 @@ public class PeriodeController {
         return this.periodeService.getPeriodeById(id);
     }
 
-    @PostMapping("/periode")
+    @PostMapping
     @Operation(
             summary = "Crée une nouvelle période",
             description = "Ajoute une nouvelle période à la base de données.",
@@ -87,7 +87,7 @@ public class PeriodeController {
         return this.periodeService.createPeriodeByParc(periodeDto);
     }
 
-    @PutMapping("/periode/{id}")
+    @PutMapping("/{id}")
     @Operation(
             summary = "Met à jour une période",
             description = "Met à jour les informations d'une période existante basée sur son ID.",
@@ -111,7 +111,7 @@ public class PeriodeController {
         return this.periodeService.updatePeriode(periodeDto, id);
     }
 
-    @DeleteMapping("/periode/{id}")
+    @DeleteMapping("/{id}")
     @Operation(
             summary = "Supprime une période",
             description = "Supprime une période basée sur son ID.",

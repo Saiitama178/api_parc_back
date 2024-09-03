@@ -33,23 +33,25 @@ public class PossederController {
         return this.possederService.findAll();
     }
 
-    @GetMapping("/posseder/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<PossederDto> getPossederById(@PathVariable Integer id) {
         return this.possederService.getPossederById(id);
     }
 
-    @PostMapping("/posseder")
+    @PostMapping
     public ResponseEntity<PossederDto> createPosseder(@RequestBody PossederDto possederDto) {
         return this.possederService.createPosseder(possederDto);
     }
 
-    @DeleteMapping("/posseder/{id}")
+    @PutMapping("/{id}")
+    public ResponseEntity<PossederDto> updatePosseder(@PathVariable Integer id, @RequestBody PossederDto possederDto) {
+        return this.possederService.updatePosseder(id, possederDto);
+    }
+
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePosseder(@PathVariable Integer id) {
         return this.possederService.deletePosseder(id);
     }
 
-    @PutMapping("/posseder/{id}")
-    public ResponseEntity<PossederDto> updatePosseder(@PathVariable Integer id, @RequestBody PossederDto possederDto) {
-        return this.possederService.updatePosseder(id, possederDto);
-    }
+
 }

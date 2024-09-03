@@ -27,7 +27,7 @@ public class VilleController {
 
     private final VilleService villeService;
 
-    @GetMapping("/ville")
+    @GetMapping
     @Operation(
             summary = "Affiche la liste des villes",
             description = "Retourne une liste de toutes les villes.",
@@ -40,7 +40,7 @@ public class VilleController {
         return this.villeService.getAllVilles();
     }
 
-    @GetMapping("/ville/{id}")
+    @GetMapping("/{id}")
     @Operation(
             summary = "Affiche une ville par ID",
             description = "Retourne une ville basée sur son ID.",
@@ -53,20 +53,20 @@ public class VilleController {
         return this.villeService.getVilleById(id);
     }
 
-    @DeleteMapping("/ville/{id}")
+    @PostMapping
     @Operation(
-            summary = "Supprime une ville",
-            description = "Supprime une ville basée sur son ID.",
+            summary = "Crée une nouvelle ville",
+            description = "Ajoute une nouvelle ville à la base de données.",
             operationId = "ville",
             responses = {
-                    @ApiResponse(responseCode = "204", description = "Ville supprimée"),
-                    @ApiResponse(responseCode = "404", description = "Ville non trouvée")
+                    @ApiResponse(responseCode = "201", description = "Ville créée", content = @Content(mediaType = "application/json", schema = @Schema(implementation = VilleDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Requête invalide")
             })
-    public ResponseEntity<Void> deleteVille(@PathVariable Integer id) {
-        return this.villeService.deleteVille(id);
+    public ResponseEntity<VilleDto> createVille(@RequestBody VilleDto villeDto) {
+        return this.villeService.createVillebyRegion(villeDto);
     }
 
-    @PutMapping("/ville/{id}")
+    @PutMapping("/{id}")
     @Operation(
             summary = "Met à jour une ville",
             description = "Met à jour les informations d'une ville existante basée sur son ID.",
@@ -80,17 +80,17 @@ public class VilleController {
         return this.villeService.updateVille(id, villeDto);
     }
 
-    @PostMapping("/ville")
+    @DeleteMapping("/{id}")
     @Operation(
-            summary = "Crée une nouvelle ville",
-            description = "Ajoute une nouvelle ville à la base de données.",
+            summary = "Supprime une ville",
+            description = "Supprime une ville basée sur son ID.",
             operationId = "ville",
             responses = {
-                    @ApiResponse(responseCode = "201", description = "Ville créée", content = @Content(mediaType = "application/json", schema = @Schema(implementation = VilleDto.class))),
-                    @ApiResponse(responseCode = "400", description = "Requête invalide")
+                    @ApiResponse(responseCode = "204", description = "Ville supprimée"),
+                    @ApiResponse(responseCode = "404", description = "Ville non trouvée")
             })
-    public ResponseEntity<VilleDto> createVille(@RequestBody VilleDto villeDto) {
-        return this.villeService.createVillebyRegion(villeDto);
+    public ResponseEntity<Void> deleteVille(@PathVariable Integer id) {
+        return this.villeService.deleteVille(id);
     }
 }
 

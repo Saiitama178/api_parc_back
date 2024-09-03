@@ -25,7 +25,7 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/utilisateur")
+@RequestMapping("/user")
 @Tag(name = "utilisateur", description = "Opérations sur les utilisateurs")
 public class UtilisateurController {
 
@@ -34,7 +34,7 @@ public class UtilisateurController {
     private final UtilisateurService utilisateurService;
 
 
-    @GetMapping("/admin/utilisateurs")
+    @GetMapping
     @Operation(summary = "Affiche la liste des utilisateurs",
             description = "Retourne une liste d'utilisateur",
             operationId = "utilisateurs",
@@ -46,7 +46,7 @@ public class UtilisateurController {
         return this.utilisateurService.getAllUtilisateur();
     }
 
-    @GetMapping("/admin/utilisateurs/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Obtenir un utilisateur par ID",
             description = "Retourne un utilisateur spécifique basé sur son ID",
             operationId = "utilisateurs",
@@ -58,19 +58,9 @@ public class UtilisateurController {
         return this.utilisateurService.getUtilisateurById(id);
     }
 
-    @DeleteMapping("/admin/utilisateurs/{id}")
-    @Operation(summary = "Supprimer un utilisateur",
-            description = "Supprime un utilisateur basé sur son ID",
-            operationId = "utilisateurs",
-            responses = {
-                    @ApiResponse(responseCode = "204", description = "Utilisateur supprimé"),
-                    @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
-            })
-    public ResponseEntity<Void> deleteUtilisateur(@PathVariable Integer id) {
-        return this.utilisateurService.deleteUtilisateur(id);
-    }
 
-    @PutMapping("/user/maj/{id}")
+
+    @PutMapping("/{id}")
     @Operation(summary = "Mettre à jour un utilisateur",
             description = "Met à jour les informations d'un utilisateur basé sur son ID",
             operationId = "utilisateurs",
@@ -81,6 +71,18 @@ public class UtilisateurController {
             })
     public ResponseEntity<UtilisateurDto> updateUtilisateur(@PathVariable Integer id, @RequestBody UtilisateurDto utilisateurDto) {
         return this.utilisateurService.updateUtilisateur(id, utilisateurDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Supprimer un utilisateur",
+            description = "Supprime un utilisateur basé sur son ID",
+            operationId = "utilisateurs",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Utilisateur supprimé"),
+                    @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
+            })
+    public ResponseEntity<Void> deleteUtilisateur(@PathVariable Integer id) {
+        return this.utilisateurService.deleteUtilisateur(id);
     }
 }
 
