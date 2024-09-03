@@ -87,20 +87,6 @@ public class PaysController {
         return this.paysService.createPay(paysDto);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(
-            summary = "Supprime un pays",
-            description = "Supprime un pays basé sur son ID.",
-            operationId = "pays",
-            responses = {
-                    @ApiResponse(responseCode = "204", description = "Pays supprimé avec succès"),
-                    @ApiResponse(responseCode = "404", description = "Pays non trouvé")
-            }
-    )
-    public ResponseEntity<Void> deletePays(
-            @Parameter(description = "ID du pays à supprimer") @PathVariable Integer id) {
-        return this.paysService.deletePay(id);
-    }
 
     @PutMapping("/{id}")
     @Operation(
@@ -124,6 +110,21 @@ public class PaysController {
             @Parameter(description = "ID du pays à mettre à jour") @PathVariable Integer id,
             @Parameter(description = "Nouvelles informations du pays") @RequestBody PaysDto paysDto) {
         return this.paysService.updatePays(id, paysDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Supprime un pays",
+            description = "Supprime un pays basé sur son ID.",
+            operationId = "pays",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Pays supprimé avec succès"),
+                    @ApiResponse(responseCode = "404", description = "Pays non trouvé")
+            }
+    )
+    public ResponseEntity<Void> deletePays(
+            @Parameter(description = "ID du pays à supprimer") @PathVariable Integer id) {
+        return this.paysService.deletePay(id);
     }
 }
 

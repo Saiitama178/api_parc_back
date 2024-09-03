@@ -42,7 +42,7 @@ public class ClasserService {
         return false;
     }
 
-    public Optional<ClasserDto> updateClasser(Integer id) {
+    public Optional<ClasserDto> updateClasser(Integer id, ClasserDto classerDto) {
         Optional<Classer> existingClasser = classerRepository.findById(id);
         if (existingClasser.isPresent()) {
             Classer classer = existingClasser.get();

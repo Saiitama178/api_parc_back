@@ -17,12 +17,13 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/parcs")
 @Tag(name = "parc", description = "Opérations liées aux parcs")
 public class ParcController {
 
     private final ParcService parcService;
 
-    @GetMapping("/view-parcs")
+    @GetMapping
     @PreAuthorize("hasAuthority('Visiteur')")
     @Operation(
             summary = "Affiche la liste des parcs",
@@ -66,7 +67,7 @@ public class ParcController {
         return this.parcService.getNomParc(nomParc);
     }
 
-    @PostMapping("/create-parc")
+    @PostMapping
     @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Crée un nouveau parc",
@@ -89,25 +90,10 @@ public class ParcController {
         return this.parcService.createParc(parcDto);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(
-            summary = "Supprime un parc",
-            description = "Supprime un parc basé sur son ID.",
-            operationId = "parc",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "204",
-                            description = "Parc supprimé avec succès"
-                    ),
-                    @ApiResponse(responseCode = "404", description = "Parc non trouvé")
-            }
-    )
-    public ResponseEntity<Void> deleteParc(
-            @Parameter(description = "ID du parc à supprimer") @PathVariable int id) {
-        return this.parcService.deleteParc(id);
-    }
+
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Met à jour un parc",
             description = "Met à jour les informations d'un parc existant.",
@@ -129,5 +115,24 @@ public class ParcController {
             @Parameter(description = "ID du parc à mettre à jour") @PathVariable int id,
             @Parameter(description = "Nouvelles informations du parc") @RequestBody ParcDto parcDto) {
         return this.parcService.updateParc(id, parcDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
+    @Operation(
+            summary = "Supprime un parc",
+            description = "Supprime un parc basé sur son ID.",
+            operationId = "parc",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Parc supprimé avec succès"
+                    ),
+                    @ApiResponse(responseCode = "404", description = "Parc non trouvé")
+            }
+    )
+    public ResponseEntity<Void> deleteParc(
+            @Parameter(description = "ID du parc à supprimer") @PathVariable int id) {
+        return this.parcService.deleteParc(id);
     }
 }

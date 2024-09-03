@@ -21,7 +21,7 @@ public class ReseauxSociauxController {
 
     private final ReseauxSociauxService reseauxSociauxService;
 
-    @GetMapping("/reseauxsociaux")
+    @GetMapping
     @Operation(
             summary = "Affiche la liste des réseaux sociaux",
             description = "Retourne une liste de tous les réseaux sociaux.",
@@ -42,7 +42,7 @@ public class ReseauxSociauxController {
         return this.reseauxSociauxService.getAllReseauxSociaux();
     }
 
-    @GetMapping("/reseauxsociaux/{id}")
+    @GetMapping("/{id}")
     @Operation(
             summary = "Affiche un réseau social par ID",
             description = "Retourne un réseau social basé sur son ID.",
@@ -63,7 +63,7 @@ public class ReseauxSociauxController {
         return this.reseauxSociauxService.getReseauxSociauxById(id);
     }
 
-    @PostMapping("/reseauxsociaux")
+    @PostMapping
     @Operation(
             summary = "Crée un nouveau réseau social",
             description = "Ajoute un nouveau réseau social à la base de données.",
@@ -84,7 +84,7 @@ public class ReseauxSociauxController {
         return this.reseauxSociauxService.createReseauxSociaux(newReseauxSociauxDto);
     }
 
-    @PutMapping("/reseauxsociaux/{id}")
+    @PutMapping("/{id}")
     @Operation(
             summary = "Met à jour un réseau social",
             description = "Met à jour les informations d'un réseau social existant basé sur son ID.",
@@ -106,7 +106,7 @@ public class ReseauxSociauxController {
         return this.reseauxSociauxService.updateReseauxSociaux(id, reseauxSociauxDto);
     }
 
-    @DeleteMapping("/reseauxsociaux/{id}")
+    @DeleteMapping("/{id}")
     @Operation(
             summary = "Supprime un réseau social",
             description = "Supprime un réseau social basé sur son ID.",

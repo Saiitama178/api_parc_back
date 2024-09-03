@@ -21,7 +21,7 @@ public class RoleController {
 
     private final RoleService roleService;
 
-    @GetMapping("/role")
+    @GetMapping
     @Operation(
             summary = "Affiche la liste des rôles",
             description = "Retourne une liste de tous les rôles.",
@@ -42,7 +42,7 @@ public class RoleController {
         return this.roleService.getAllRole();
     }
 
-    @GetMapping("/role/{id}")
+    @GetMapping("/{id}")
     @Operation(
             summary = "Affiche un rôle par ID",
             description = "Retourne un rôle basé sur son ID.",
@@ -63,7 +63,7 @@ public class RoleController {
         return this.roleService.getRoleById(id);
     }
 
-    @PostMapping("/role")
+    @PostMapping
     @Operation(
             summary = "Crée un nouveau rôle",
             description = "Ajoute un nouveau rôle à la base de données.",
@@ -84,7 +84,7 @@ public class RoleController {
         return this.roleService.createRole(roleDto);
     }
 
-    @PutMapping("/role/{id}")
+    @PutMapping("/{id}")
     @Operation(
             summary = "Met à jour un rôle",
             description = "Met à jour les informations d'un rôle existant basé sur son ID.",
@@ -106,7 +106,7 @@ public class RoleController {
         return this.roleService.updateRole(id, roleDto);
     }
 
-    @DeleteMapping("/role/{id}")
+    @DeleteMapping("/{id}")
     @Operation(
             summary = "Supprime un rôle",
             description = "Supprime un rôle basé sur son ID.",

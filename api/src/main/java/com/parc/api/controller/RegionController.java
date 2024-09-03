@@ -21,7 +21,7 @@ public class RegionController {
 
     private final RegionService regionService;
 
-    @GetMapping("/region")
+    @GetMapping
     @Operation(
             summary = "Affiche la liste des régions",
             description = "Retourne une liste de toutes les régions.",
@@ -42,8 +42,7 @@ public class RegionController {
         return this.regionService.getAllRegions();
     }
 
-    @CrossOrigin(origins = "http://localhost:3308")
-    @GetMapping("/region/{id}")
+    @GetMapping("/{id}")
     @Operation(
             summary = "Affiche une région par ID",
             description = "Retourne une région basée sur son ID.",
@@ -64,7 +63,7 @@ public class RegionController {
         return this.regionService.getRegionById(id);
     }
 
-    @PostMapping("/region")
+    @PostMapping
     @Operation(
             summary = "Crée une nouvelle région",
             description = "Ajoute une nouvelle région à la base de données.",
@@ -85,21 +84,9 @@ public class RegionController {
         return this.regionService.createRegionByPays(regionDto);
     }
 
-    @DeleteMapping("/region/{id}")
-    @Operation(
-            summary = "Supprime une région",
-            description = "Supprime une région basée sur son ID.",
-            operationId = "region",
-            responses = {
-                    @ApiResponse(responseCode = "204", description = "Région supprimée"),
-                    @ApiResponse(responseCode = "404", description = "Région non trouvée")
-            }
-    )
-    public ResponseEntity<Void> deleteRegion(@PathVariable Integer id) {
-        return this.regionService.deleteRegion(id);
-    }
 
-    @PutMapping("/region/{id}")
+
+    @PutMapping("/{id}")
     @Operation(
             summary = "Met à jour une région",
             description = "Met à jour les informations d'une région existante basée sur son ID.",
@@ -119,6 +106,20 @@ public class RegionController {
     )
     public ResponseEntity<RegionDto> updateRegion(@PathVariable Integer id, @RequestBody RegionDto regionDto) {
         return this.regionService.updateRegion(id, regionDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Supprime une région",
+            description = "Supprime une région basée sur son ID.",
+            operationId = "region",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Région supprimée"),
+                    @ApiResponse(responseCode = "404", description = "Région non trouvée")
+            }
+    )
+    public ResponseEntity<Void> deleteRegion(@PathVariable Integer id) {
+        return this.regionService.deleteRegion(id);
     }
 }
 

@@ -22,7 +22,7 @@ public class TypeImageController {
 
     private final TypeImageService typeImageService;
 
-    @GetMapping("/typeImage")
+    @GetMapping
     @Operation(
             summary = "Affiche la liste des types d'image",
             description = "Retourne une liste de tous les types d'image.",
@@ -43,7 +43,7 @@ public class TypeImageController {
         return typeImageService.getAllTypeImage();
     }
 
-    @GetMapping("/typeImage/{id}")
+    @GetMapping("/{id}")
     @Operation(
             summary = "Affiche un type d'image par ID",
             description = "Retourne un type d'image basé sur son ID.",
@@ -64,7 +64,7 @@ public class TypeImageController {
         return typeImageService.getTypeImageById(id);
     }
 
-    @PostMapping("/typeImage")
+    @PostMapping
     @Operation(
             summary = "Crée un nouveau type d'image",
             description = "Ajoute un nouveau type d'image à la base de données.",
@@ -85,21 +85,8 @@ public class TypeImageController {
         return typeImageService.createTypeImage(typeImageDto);
     }
 
-    @DeleteMapping("/typeImage/{id}")
-    @Operation(
-            summary = "Supprime un type d'image",
-            description = "Supprime un type d'image basé sur son ID.",
-            operationId = "type-image",
-            responses = {
-                    @ApiResponse(responseCode = "204", description = "Type d'image supprimé"),
-                    @ApiResponse(responseCode = "404", description = "Type d'image non trouvé")
-            }
-    )
-    public ResponseEntity<Void> deleteTypeImage(@PathVariable Integer id) {
-        return typeImageService.deleteTypeImage(id);
-    }
 
-    @PutMapping("/typeImage/{id}")
+    @PutMapping("/{id}")
     @Operation(
             summary = "Met à jour un type d'image",
             description = "Met à jour les informations d'un type d'image existant basé sur son ID.",
@@ -119,6 +106,20 @@ public class TypeImageController {
     )
     public ResponseEntity<TypeImageDto> updateTypeImage(@PathVariable Integer id, @RequestBody TypeImageDto typeImageDto) {
         return typeImageService.updateTypeImage(id, typeImageDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Supprime un type d'image",
+            description = "Supprime un type d'image basé sur son ID.",
+            operationId = "type-image",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Type d'image supprimé"),
+                    @ApiResponse(responseCode = "404", description = "Type d'image non trouvé")
+            }
+    )
+    public ResponseEntity<Void> deleteTypeImage(@PathVariable Integer id) {
+        return typeImageService.deleteTypeImage(id);
     }
 }
 

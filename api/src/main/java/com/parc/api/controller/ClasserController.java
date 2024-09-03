@@ -3,6 +3,7 @@ package com.parc.api.controller;
 import com.parc.api.model.dto.ClasserDto;
 import com.parc.api.service.ClasserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,7 +27,7 @@ public class ClasserController {
     @Operation(
             summary = "Affiche la liste de la table classer",
             description = "Retourne une liste de tous les classer.",
-            operationId = "classer",
+            operationId = "getAllClassers",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -47,7 +48,7 @@ public class ClasserController {
     @Operation(
             summary = "Affiche un classer par ID",
             description = "Retourne les détails d'un classer basé sur son ID.",
-            operationId = "classer",
+            operationId = "getClasserById",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -60,15 +61,18 @@ public class ClasserController {
                     @ApiResponse(responseCode = "404", description = "Classer non trouvé")
             }
     )
-    public Optional<ClasserDto> getClasserById(@PathVariable Integer id) {
-        return this.classerService.getClasserById(id);
+    public ResponseEntity<ClasserDto> getClasserById(
+            @Parameter(description = "ID du classer à rechercher") @PathVariable Integer id) {
+        Optional<ClasserDto> classerDto = this.classerService.getClasserById(id);
+        return classerDto.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(404).build());
     }
 
     @PostMapping
     @Operation(
             summary = "Crée un nouveau classer",
             description = "Ajoute un nouveau classer à la base de données.",
-            operationId = "classer",
+            operationId = "createClasser",
             responses = {
                     @ApiResponse(
                             responseCode = "201",
@@ -81,32 +85,18 @@ public class ClasserController {
                     @ApiResponse(responseCode = "400", description = "Requête invalide")
             }
     )
-    public ClasserDto createClasser(@RequestBody ClasserDto classerDto) {
-        return this.classerService.createClasser(classerDto);
+    public ResponseEntity<ClasserDto> createClasser(
+            @Parameter(description = "Détails du classer à créer") @RequestBody ClasserDto classerDto) {
+        ClasserDto createdClasser = this.classerService.createClasser(classerDto);
+        return ResponseEntity.status(201).body(createdClasser);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(
-            summary = "Supprime un classer",
-            description = "Supprime un classer basé sur son ID.",
-            operationId = "classer",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "204",
-                            description = "Classer supprimé avec succès"
-                    ),
-                    @ApiResponse(responseCode = "404", description = "Classer non trouvé")
-            }
-    )
-    public boolean deleteClasser(@PathVariable Integer id) {
-        return this.classerService.deleteClasser(id);
-    }
 
     @PutMapping("/{id}")
     @Operation(
             summary = "Met à jour un classer",
             description = "Met à jour les informations d'un classer existant.",
-            operationId = "classer",
+            operationId = "updateClasser",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -120,7 +110,34 @@ public class ClasserController {
                     @ApiResponse(responseCode = "400", description = "Données invalides")
             }
     )
-    public Optional<ClasserDto> updateClasser(@PathVariable Integer id) {
-        return this.classerService.updateClasser(id);
+    public ResponseEntity<ClasserDto> updateClasser(
+            @Parameter(description = "ID du classer à mettre à jour") @PathVariable Integer id,
+            @Parameter(description = "Nouvelles informations du classer") @RequestBody ClasserDto classerDto) {
+        Optional<ClasserDto> updatedClasser = this.classerService.updateClasser(id, classerDto);
+        return updatedClasser.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(404).build());
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Supprime un classer",
+            description = "Supprime un classer basé sur son ID.",
+            operationId = "deleteClasser",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Classer supprimé avec succès"
+                    ),
+                    @ApiResponse(responseCode = "404", description = "Classer non trouvé")
+            }
+    )
+    public ResponseEntity<Void> deleteClasser(
+            @Parameter(description = "ID du classer à supprimer") @PathVariable Integer id) {
+        boolean isDeleted = this.classerService.deleteClasser(id);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(404).build();
+        }
     }
 }

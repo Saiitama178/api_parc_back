@@ -36,6 +36,7 @@ public class LoginSignUpController {
     private final TokenBlacklistService tokenBlacklistService;
     private final UtilisateurService utilisateurService;
 
+    @PostMapping("/connexion")
     @Operation(summary = "Connexion utilisateur",
             description = "Authentifie un utilisateur et retourne un token JWT",
             operationId = "connexion",
@@ -43,7 +44,6 @@ public class LoginSignUpController {
                     @ApiResponse(responseCode = "200", description = "Authentification réussie", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class))),
                     @ApiResponse(responseCode = "400", description = "Informations d'identification invalides")
             })
-    @PostMapping("/connexion")
     public ResponseEntity<Map<String, String>> connexion(@RequestBody AuthentificationDTO authentificationDTO) {
         try {
             final Authentication authentication = authenticationManager.authenticate(
@@ -67,7 +67,7 @@ public class LoginSignUpController {
         }
     }
 
-
+    @PostMapping("/inscription")
     @Operation(summary = "Créer un utilisateur",
             description = "Crée un nouvel utilisateur",
             operationId = "inscription",
@@ -75,12 +75,11 @@ public class LoginSignUpController {
                     @ApiResponse(responseCode = "201", description = "Utilisateur créé", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UtilisateurDto.class))),
                     @ApiResponse(responseCode = "400", description = "Données invalides")
             })
-    @PostMapping("/inscription")
     public ResponseEntity<UtilisateurDto> inscription(@RequestBody UtilisateurDto utilisateurDto) {
         return this.utilisateurService.createUtilisateur(utilisateurDto);
     }
 
-
+    @PostMapping("/activation")
     @Operation(summary = "Activer un utilisateur",
             description = "Active un utilisateur basé sur le code d'activation",
             operationId = "activation",
@@ -89,7 +88,6 @@ public class LoginSignUpController {
                     @ApiResponse(responseCode = "400", description = "Code d'activation invalide ou expiré"),
                     @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
             })
-    @PostMapping("/activation")
     public void activation(@RequestBody Map<String, String> activation) {
         this.utilisateurService.activation(activation);
     }

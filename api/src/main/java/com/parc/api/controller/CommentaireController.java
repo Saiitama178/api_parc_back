@@ -19,7 +19,7 @@ public class CommentaireController {
 
     private final CommentaireService commentaireService;
 
-    @GetMapping("/commentaire")
+    @GetMapping
     @Operation(summary = "Affiche la liste des commentaires", description = "Retourne une liste de tous les commentaires.",
             operationId = "commentaire",
             responses = {
@@ -30,7 +30,7 @@ public class CommentaireController {
         return this.commentaireService.getAllCommentaire();
     }
 
-    @GetMapping("/commentaire/{id}")
+    @GetMapping("/{id}")
     @Operation(
             summary = "Affiche un commentaire par ID",
             description = "Retourne un commentaire basé sur son ID.",
@@ -43,7 +43,7 @@ public class CommentaireController {
         return this.commentaireService.getCommentaireById(id);
     }
 
-    @PostMapping("/commentaire")
+    @PostMapping
     @Operation(summary = "Crée un nouveau commentaire",
             description = "Ajoute un nouveau commentaire à la base de données.",
             operationId = "commentaire",
@@ -55,7 +55,7 @@ public class CommentaireController {
         return this.commentaireService.createCommentaire(commentaireDto);
     }
 
-    @PutMapping("/commentaire/{id}")
+    @PutMapping("/{id}")
     @Operation(
             summary = "Met à jour un commentaire",
             description = "Met à jour les informations d'un commentaire existant basé sur son ID.",
@@ -68,7 +68,7 @@ public class CommentaireController {
         return this.commentaireService.updateCommentaire(id, commentaireDto);
     }
 
-    @DeleteMapping("/commentaire/{id}")
+    @DeleteMapping("/{id}")
     @Operation(
             summary = "Supprime un commentaire",
             description = "Supprime un commentaire basé sur son ID.",
