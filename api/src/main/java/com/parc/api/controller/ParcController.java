@@ -10,19 +10,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/parc")
 @Tag(name = "parc", description = "Opérations liées aux parcs")
 public class ParcController {
 
     private final ParcService parcService;
 
-    @GetMapping
+    @GetMapping("/view-parcs")
+    @PreAuthorize("hasAuthority('Visiteur')")
     @Operation(
             summary = "Affiche la liste des parcs",
             description = "Retourne une liste de tous les parcs.",
@@ -65,7 +66,8 @@ public class ParcController {
         return this.parcService.getNomParc(nomParc);
     }
 
-    @PostMapping
+    @PostMapping("/create-parc")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Crée un nouveau parc",
             description = "Ajoute un nouveau parc à la base de données.",

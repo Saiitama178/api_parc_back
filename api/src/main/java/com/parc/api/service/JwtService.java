@@ -1,23 +1,25 @@
 package com.parc.api.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
+import java.util.function.Function;
+
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
 public class JwtService {
+
+    private final TokenBlacklistService tokenBlacklistService;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -43,27 +45,29 @@ public class JwtService {
                 .compact();
     }
 
-
     private Key getSignKey() {
-        byte[] keyBytes = Base64.getDecoder().decode(secretKey);
-        return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
+        try {
+            byte[] keyBytes = Base64.getDecoder().decode(secretKey);
+            return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid JWT secret key: " + e.getMessage());
+        }
+    }
+
+    private Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
+
+    public Boolean validateToken(String token, String email) {
+        final String extractedUsername = extractEmail(token);
+        return (extractedUsername.equals(email) && !isTokenExpired(token));
     }
 
     public boolean isTokenExpired(String token) {
         return extractExpirationDate(token).before(new Date());
     }
 
-    private Date extractExpirationDate(String token) {
-        return extractClaim(token, Claims::getExpiration);
-    }
-
-
-    public boolean validateToken(String token, String email) {
-        String username = extractUsername(token);
-        return username != null && username.equals(email) && !isTokenExpired(token);
-    }
-
-    public String extractUsername(String token) {
+    public String extractEmail(String token) {
         Claims claims = extractAllClaims(token);
         return claims.getSubject();
     }
@@ -74,11 +78,31 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(getSignKey())
-                .build()
-                .parseSignedClaims(token)
-                .getBody();
+        try {
+            return Jwts.parser()
+                    .setSigningKey(getSignKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            // Gérer les jetons expirés ici
+            throw new RuntimeException("JWT token has expired", e);
+        } catch (JwtException | IllegalArgumentException e) {
+            // Gérer les autres erreurs JWT ici
+            throw new RuntimeException("Invalid JWT token", e);
+        }
+    }
+
+    public String extractTokenFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    public Date extractExpirationDate(String token) {
+        return extractExpiration(token);
     }
 
 }

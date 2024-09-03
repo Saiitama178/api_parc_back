@@ -34,7 +34,7 @@ public class UtilisateurController {
     private final UtilisateurService utilisateurService;
 
 
-    @GetMapping("/user")
+    @GetMapping("/admin/utilisateurs")
     @Operation(summary = "Affiche la liste des utilisateurs",
             description = "Retourne une liste d'utilisateur",
             operationId = "utilisateurs",
@@ -46,6 +46,7 @@ public class UtilisateurController {
         return this.utilisateurService.getAllUtilisateur();
     }
 
+    @GetMapping("/admin/utilisateurs/{id}")
     @Operation(summary = "Obtenir un utilisateur par ID",
             description = "Retourne un utilisateur spécifique basé sur son ID",
             operationId = "utilisateurs",
@@ -53,11 +54,11 @@ public class UtilisateurController {
                     @ApiResponse(responseCode = "200", description = "Utilisateur trouvé", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UtilisateurDto.class))),
                     @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
             })
-    @GetMapping("/user/{id}")
     public ResponseEntity<UtilisateurDto> getUtilisateurById(@PathVariable Integer id) {
         return this.utilisateurService.getUtilisateurById(id);
     }
 
+    @DeleteMapping("/admin/utilisateurs/{id}")
     @Operation(summary = "Supprimer un utilisateur",
             description = "Supprime un utilisateur basé sur son ID",
             operationId = "utilisateurs",
@@ -65,11 +66,11 @@ public class UtilisateurController {
                     @ApiResponse(responseCode = "204", description = "Utilisateur supprimé"),
                     @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
             })
-    @DeleteMapping("/user/{id}")
     public ResponseEntity<Void> deleteUtilisateur(@PathVariable Integer id) {
         return this.utilisateurService.deleteUtilisateur(id);
     }
 
+    @PutMapping("/user/maj/{id}")
     @Operation(summary = "Mettre à jour un utilisateur",
             description = "Met à jour les informations d'un utilisateur basé sur son ID",
             operationId = "utilisateurs",
@@ -78,7 +79,6 @@ public class UtilisateurController {
                     @ApiResponse(responseCode = "400", description = "Données invalides"),
                     @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
             })
-    @PutMapping("/user/maj/{id}")
     public ResponseEntity<UtilisateurDto> updateUtilisateur(@PathVariable Integer id, @RequestBody UtilisateurDto utilisateurDto) {
         return this.utilisateurService.updateUtilisateur(id, utilisateurDto);
     }
