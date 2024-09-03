@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,7 +28,6 @@ public class UtilisateurService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ValidationService validationService;
 
-    @Transactional(readOnly = true)
     public ResponseEntity<List<UtilisateurDto>> getAllUtilisateur() {
         List<Utilisateur> utilisateurList = utilisateurRepository.findAll();
         List<UtilisateurDto> utilisateurDtos = utilisateurList.stream()
@@ -37,7 +35,6 @@ public class UtilisateurService {
         return ResponseEntity.ok(utilisateurDtos);
     }
 
-    @Transactional(readOnly = true)
     public ResponseEntity<UtilisateurDto> getUtilisateurById(@PathVariable Integer id) {
         Optional<Utilisateur> utilisateur = utilisateurRepository.findById(id);
         if (utilisateur.isPresent()) {
@@ -48,7 +45,6 @@ public class UtilisateurService {
         }
     }
 
-    @Transactional
     public ResponseEntity<UtilisateurDto> createUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
         // Vérifie si l'email existe déjà dans la base de données
         Optional<Utilisateur> utilisateurOptional = this.utilisateurRepository.findByEmail(utilisateurDto.getEmail());
@@ -75,7 +71,6 @@ public class UtilisateurService {
         return new ResponseEntity<>(savedUtilisateurDto, HttpStatus.CREATED);
     }
 
-    @Transactional
     public ResponseEntity<Void> deleteUtilisateur(@PathVariable Integer id) {
         Optional<Utilisateur> utilisateurOptional = utilisateurRepository.findById(id);
         if (utilisateurOptional.isPresent()) {
@@ -86,7 +81,6 @@ public class UtilisateurService {
         }
     }
 
-    @Transactional
     public ResponseEntity<UtilisateurDto> updateUtilisateur(@PathVariable Integer id, @RequestBody UtilisateurDto utilisateurDto) {
         Optional<Utilisateur> existingUtilisateur = utilisateurRepository.findById(id);
         if (existingUtilisateur.isPresent()) {
@@ -105,7 +99,6 @@ public class UtilisateurService {
         }
     }
 
-    @Transactional
     public void activation(Map<String, String> activation) {
         Validation validation = this.validationService.LireEnFonctionDuCode(activation.get("code"));
         if (Instant.now().isAfter(validation.getExpire())) {

@@ -1,6 +1,7 @@
 package com.parc.api.security.jwt;
 
 import com.parc.api.service.JwtService;
+import com.parc.api.service.TokenBlacklistService;
 import com.parc.api.service.UserLoaderService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -23,32 +24,36 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
 
     private final UserLoaderService userLoaderService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String authorizationHeader = request.getHeader("Authorization");
-
-        String email = null;
-        String token = null;
+        String email;
+        String token;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-
             token = authorizationHeader.substring(7);
-            email = jwtService.extractUsername(token);
-        }
 
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userLoaderService.loadUserByUsername(email);
+            if (tokenBlacklistService.isTokenBlacklisted(token)) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
 
-            if (jwtService.validateToken(token, email)) {
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            email = jwtService.extractEmail(token);
+
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userLoaderService.loadUserByUsername(email);
+
+                if (jwtService.validateToken(token, email)) {
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
             }
         }
-
         filterChain.doFilter(request, response);
     }
 }
