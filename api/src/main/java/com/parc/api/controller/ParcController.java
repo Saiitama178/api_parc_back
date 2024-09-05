@@ -24,7 +24,6 @@ public class ParcController {
     private final ParcService parcService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('Visiteur')")
     @Operation(
             summary = "Affiche la liste des parcs",
             description = "Retourne une liste de tous les parcs.",

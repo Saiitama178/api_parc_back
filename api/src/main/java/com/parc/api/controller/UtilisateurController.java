@@ -1,6 +1,5 @@
 package com.parc.api.controller;
 
-import com.parc.api.model.dto.AuthentificationDTO;
 import com.parc.api.model.dto.UtilisateurDto;
 import com.parc.api.service.JwtService;
 import com.parc.api.service.UtilisateurService;
@@ -11,16 +10,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-
-import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 
 @RestController
@@ -35,6 +29,7 @@ public class UtilisateurController {
 
 
     @GetMapping
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(summary = "Affiche la liste des utilisateurs",
             description = "Retourne une liste d'utilisateur",
             operationId = "utilisateurs",
@@ -47,6 +42,7 @@ public class UtilisateurController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(summary = "Obtenir un utilisateur par ID",
             description = "Retourne un utilisateur spécifique basé sur son ID",
             operationId = "utilisateurs",
@@ -58,9 +54,8 @@ public class UtilisateurController {
         return this.utilisateurService.getUtilisateurById(id);
     }
 
-
-
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('Visiteur') and #id == authentication.principal.id")
     @Operation(summary = "Mettre à jour un utilisateur",
             description = "Met à jour les informations d'un utilisateur basé sur son ID",
             operationId = "utilisateurs",
@@ -74,6 +69,7 @@ public class UtilisateurController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("('Administrateur')")
     @Operation(summary = "Supprimer un utilisateur",
             description = "Supprime un utilisateur basé sur son ID",
             operationId = "utilisateurs",

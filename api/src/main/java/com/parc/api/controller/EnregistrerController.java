@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -67,6 +68,7 @@ public class EnregistrerController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Crée une nouvelle entrée",
             description = "Ajoute une nouvelle entrée à l'entité Enregistrer.",
@@ -89,6 +91,7 @@ public class EnregistrerController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Met à jour une entrée",
             description = "Met à jour les informations d'une entrée basée sur son ID.",
@@ -113,6 +116,7 @@ public class EnregistrerController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Supprime une entrée",
             description = "Supprime une entrée de l'entité Enregistrer basée sur son ID.",

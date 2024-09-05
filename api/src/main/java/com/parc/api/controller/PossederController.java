@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,16 +40,19 @@ public class PossederController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('Administrateur')")
     public ResponseEntity<PossederDto> createPosseder(@RequestBody PossederDto possederDto) {
         return this.possederService.createPosseder(possederDto);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     public ResponseEntity<PossederDto> updatePosseder(@PathVariable Integer id, @RequestBody PossederDto possederDto) {
         return this.possederService.updatePosseder(id, possederDto);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     public ResponseEntity<Void> deletePosseder(@PathVariable Integer id) {
         return this.possederService.deletePosseder(id);
     }
