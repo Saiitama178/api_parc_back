@@ -20,10 +20,8 @@ import static org.mockito.Mockito.*;
 public class PaysControllerTest {
     @InjectMocks
     private PaysController paysController;
-
     @Mock
     private PaysService paysService;
-
     @BeforeEach
     void setUp(){
         MockitoAnnotations.openMocks(this);
@@ -35,7 +33,8 @@ public class PaysControllerTest {
                 new PaysDto(2, "Allemagne"),
                 new PaysDto(3, "Spain")
         );
-        when(paysService.getAllPays()).thenReturn(new ResponseEntity<>(paysDtos, HttpStatus.OK));
+        when(paysService.getAllPays())
+                .thenReturn(new ResponseEntity<>(paysDtos, HttpStatus.OK));
 
         ResponseEntity<List<PaysDto>> response = paysController.getAllPays();
 
@@ -47,7 +46,8 @@ public class PaysControllerTest {
     @Test
     void testGetPaysById(){
         PaysDto paysDto = new PaysDto(1, "France");
-        when(paysService.getPaysById(1)).thenReturn(new ResponseEntity<>(paysDto, HttpStatus.OK));
+        when(paysService.getPaysById(1))
+                .thenReturn(new ResponseEntity<>(paysDto, HttpStatus.OK));
 
         ResponseEntity<PaysDto> response = paysController.getPaysById(1);
 
@@ -60,7 +60,8 @@ public class PaysControllerTest {
     void testCreatePays(){
         PaysDto paysDto = new PaysDto(0, "New Country");
         //
-        when(paysService.createPay(paysDto)).thenReturn(new ResponseEntity<>(paysDto, HttpStatus.CREATED));
+        when(paysService.createPay(paysDto))
+                .thenReturn(new ResponseEntity<>(paysDto, HttpStatus.CREATED));
 
         ResponseEntity<PaysDto> response = paysController.createPays(paysDto);
 
@@ -72,7 +73,8 @@ public class PaysControllerTest {
     @Test
     void testDeletePays(){
         //
-        when(paysService.deletePay(1)).thenReturn(ResponseEntity.noContent().build());
+        when(paysService.deletePay(1))
+                .thenReturn(ResponseEntity.noContent().build());
 
         ResponseEntity<Void> response = paysController.deletePays(1);
 
@@ -83,7 +85,8 @@ public class PaysControllerTest {
     void testUpdatePays(){
         PaysDto paysDto = new PaysDto(1, "New Country");
         //
-        when(paysService.updatePays(1, paysDto)).thenReturn(new ResponseEntity<>(paysDto, HttpStatus.OK));
+        when(paysService.updatePays(1, paysDto))
+                .thenReturn(new ResponseEntity<>(paysDto, HttpStatus.OK));
 
         ResponseEntity<PaysDto> response = paysController.updatePays(1, paysDto);
 

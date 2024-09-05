@@ -31,7 +31,8 @@ public class PaysRepositoryTest {
     public void testFindById() {
         Pays pays = new Pays();
         pays.setId(1);
-        when(paysRepository.findById(1)).thenReturn(java.util.Optional.of(pays));
+        when(paysRepository.findById(1)).thenReturn(java.util
+                .Optional.of(pays));
         Pays result = paysRepository.findById(1).get();
         assertNotNull(result);
     }
@@ -39,7 +40,8 @@ public class PaysRepositoryTest {
     public void testSave() {
         Pays pays = new Pays();
         pays.setId(1);
-        when(paysRepository.save(any(Pays.class))).thenReturn(pays);
+        when(paysRepository.save(any(Pays.class)))
+                .thenReturn(pays);
         Pays result = paysRepository.save(new Pays());
         assertNotNull(result);
         assertEquals(1, result.getId());
@@ -48,7 +50,8 @@ public class PaysRepositoryTest {
     public void testDeleteById(){
         doNothing().when(paysRepository).deleteById(1);
         paysRepository.deleteById(1);
-        verify(paysRepository, times(1)).deleteById(1);
+        verify(paysRepository, times(1))
+                .deleteById(1);
     }
 }
 
