@@ -13,13 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 @Service
 @AllArgsConstructor
 public class PaysService {
     private final PaysRepository paysRepository;
-
-
     public ResponseEntity<List<PaysDto>> getAllPays() {
         List<Pays> pays = paysRepository.findAll();
         List<PaysDto> paysDto = pays.stream()
@@ -27,7 +24,6 @@ public class PaysService {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(paysDto);
     }
-
     public ResponseEntity<PaysDto> getPaysById(@PathVariable Integer id) {
         Optional<Pays> pays = paysRepository.findById(id);
         if (pays.isPresent()) {
@@ -37,7 +33,6 @@ public class PaysService {
             return ResponseEntity.notFound().build();
         }
     }
-
     public ResponseEntity<PaysDto> createPay(@RequestBody PaysDto paysDto) {
         if (paysDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -47,7 +42,6 @@ public class PaysService {
         PaysDto savedPaysDto = PaysMapper.toDto(savedPays);
         return new ResponseEntity<>(savedPaysDto, HttpStatus.CREATED);
     }
-
     public ResponseEntity<Void> deletePay(@PathVariable Integer id) {
         Optional<Pays> paysOptional = paysRepository.findById(id);
         if (paysOptional.isPresent()) {
@@ -57,8 +51,6 @@ public class PaysService {
             return ResponseEntity.notFound().build();
         }
     }
-
-
     public ResponseEntity<PaysDto> updatePays(@PathVariable Integer id, @RequestBody PaysDto paysDto) {
         Optional<Pays> foundPaysOptional = paysRepository.findById(id);
         if (foundPaysOptional.isPresent()) {

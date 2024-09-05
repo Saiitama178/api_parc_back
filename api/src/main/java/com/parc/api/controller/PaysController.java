@@ -19,9 +19,7 @@ import java.util.List;
 @RequestMapping("/pays")
 @Tag(name = "pays", description = "Opérations sur les données des pays")
 public class PaysController {
-
     private final PaysService paysService;
-
     @GetMapping
     @Operation(
             summary = "Liste tous les pays",
@@ -42,7 +40,6 @@ public class PaysController {
     public ResponseEntity<List<PaysDto>> getAllPays() {
         return this.paysService.getAllPays();
     }
-
     @GetMapping("/{id}")
     @Operation(
             summary = "Récupère un pays par ID",
@@ -64,7 +61,6 @@ public class PaysController {
             @Parameter(description = "ID du pays à récupérer") @PathVariable Integer id) {
         return this.paysService.getPaysById(id);
     }
-
     @PostMapping
     @Operation(
             summary = "Crée un nouveau pays",
@@ -86,7 +82,6 @@ public class PaysController {
             @Parameter(description = "Détails du pays à créer") @RequestBody PaysDto paysDto) {
         return this.paysService.createPay(paysDto);
     }
-
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Supprime un pays",
@@ -101,7 +96,6 @@ public class PaysController {
             @Parameter(description = "ID du pays à supprimer") @PathVariable Integer id) {
         return this.paysService.deletePay(id);
     }
-
     @PutMapping("/{id}")
     @Operation(
             summary = "Met à jour un pays",

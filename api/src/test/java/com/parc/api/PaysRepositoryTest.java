@@ -20,27 +20,21 @@ import static org.mockito.Mockito.*;
 public class PaysRepositoryTest {
     @Mock
     private JpaRepository<Pays, Integer> paysRepository;
-
     @Test
     public void testGetAllPays() {
         List<Pays> paysList = List.of(new Pays(), new Pays());
         when(paysRepository.findAll()).thenReturn(paysList);
-
         List<Pays> result = paysRepository.findAll();
-
         assertEquals(2, result.size());
     }
-
     @Test
     public void testFindById() {
         Pays pays = new Pays();
         pays.setId(1);
-
         when(paysRepository.findById(1)).thenReturn(java.util.Optional.of(pays));
         Pays result = paysRepository.findById(1).get();
         assertNotNull(result);
     }
-
     @Test
     public void testSave() {
         Pays pays = new Pays();
@@ -55,7 +49,6 @@ public class PaysRepositoryTest {
         doNothing().when(paysRepository).deleteById(1);
         paysRepository.deleteById(1);
         verify(paysRepository, times(1)).deleteById(1);
-
     }
 }
 
