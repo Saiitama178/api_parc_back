@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -65,7 +66,8 @@ public class PeriodeController {
         return this.periodeService.getPeriodeById(id);
     }
 
-    @PostMapping
+    @PostMapping("/parcs/{idParc}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Crée une nouvelle période",
             description = "Ajoute une nouvelle période à la base de données.",
@@ -87,7 +89,8 @@ public class PeriodeController {
         return this.periodeService.createPeriodeByParc(periodeDto);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/parcs/{idParc}/periodes/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Met à jour une période",
             description = "Met à jour les informations d'une période existante basée sur son ID.",
@@ -112,6 +115,7 @@ public class PeriodeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Supprime une période",
             description = "Supprime une période basée sur son ID.",

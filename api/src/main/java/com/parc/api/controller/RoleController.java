@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class RoleController {
     private final RoleService roleService;
 
     @GetMapping
+    @PreAuthorize("('Administrateur')")
     @Operation(
             summary = "Affiche la liste des rôles",
             description = "Retourne une liste de tous les rôles.",
@@ -43,6 +45,7 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Affiche un rôle par ID",
             description = "Retourne un rôle basé sur son ID.",
@@ -64,6 +67,7 @@ public class RoleController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Crée un nouveau rôle",
             description = "Ajoute un nouveau rôle à la base de données.",
@@ -85,6 +89,7 @@ public class RoleController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Met à jour un rôle",
             description = "Met à jour les informations d'un rôle existant basé sur son ID.",
@@ -107,6 +112,7 @@ public class RoleController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Supprime un rôle",
             description = "Supprime un rôle basé sur son ID.",

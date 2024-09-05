@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -64,6 +65,7 @@ public class RegionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Crée une nouvelle région",
             description = "Ajoute une nouvelle région à la base de données.",
@@ -87,6 +89,7 @@ public class RegionController {
 
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Met à jour une région",
             description = "Met à jour les informations d'une région existante basée sur son ID.",
@@ -109,6 +112,7 @@ public class RegionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Supprime une région",
             description = "Supprime une région basée sur son ID.",

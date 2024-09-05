@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class ImageController {
     private final ImageService imageService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Liste toutes les images",
             description = "Retourne une liste de toutes les images.",
@@ -44,6 +46,7 @@ public class ImageController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Récupère une image par ID",
             description = "Retourne les détails d'une image basée sur son ID.",
@@ -66,6 +69,7 @@ public class ImageController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Crée une nouvelle image",
             description = "Ajoute une nouvelle image à la base de données.",
@@ -88,6 +92,7 @@ public class ImageController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Met à jour une image",
             description = "Met à jour les informations d'une image basée sur son ID.",
@@ -112,6 +117,7 @@ public class ImageController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Supprime une image",
             description = "Supprime une image basée sur son ID.",

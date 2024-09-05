@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -66,6 +67,7 @@ public class PaysController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Crée un nouveau pays",
             description = "Ajoute un nouveau pays à la base de données.",
@@ -89,6 +91,7 @@ public class PaysController {
 
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Met à jour un pays",
             description = "Met à jour les informations d'un pays basé sur son ID.",
@@ -113,6 +116,7 @@ public class PaysController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Supprime un pays",
             description = "Supprime un pays basé sur son ID.",

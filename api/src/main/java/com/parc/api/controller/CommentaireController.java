@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class CommentaireController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('Visiteur')")
     @Operation(summary = "Crée un nouveau commentaire",
             description = "Ajoute un nouveau commentaire à la base de données.",
             operationId = "commentaire",
@@ -56,6 +58,7 @@ public class CommentaireController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("('Visiteur')")
     @Operation(
             summary = "Met à jour un commentaire",
             description = "Met à jour les informations d'un commentaire existant basé sur son ID.",
@@ -69,6 +72,7 @@ public class CommentaireController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Supprime un commentaire",
             description = "Supprime un commentaire basé sur son ID.",

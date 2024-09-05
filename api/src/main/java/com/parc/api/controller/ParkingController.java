@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -66,6 +67,7 @@ public class ParkingController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Crée un nouveau parking",
             description = "Ajoute un nouveau parking à la base de données.",
@@ -88,6 +90,7 @@ public class ParkingController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Met à jour un parking",
             description = "Met à jour les informations d'un parking basé sur son ID.",
@@ -112,6 +115,7 @@ public class ParkingController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Administrateur')")
     @Operation(
             summary = "Supprime un parking",
             description = "Supprime un parking basé sur son ID.",

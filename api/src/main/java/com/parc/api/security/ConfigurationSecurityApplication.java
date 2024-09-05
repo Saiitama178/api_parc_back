@@ -39,11 +39,10 @@ public class ConfigurationSecurityApplication {
                                 .requestMatchers(HttpMethod.POST, "/auth/connexion").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/activation").permitAll()
 
-                                .requestMatchers("/api/parc").authenticated()
-
+                                .requestMatchers("/admin/**").hasAuthority("Administrateur")
 
                                 // Swagger et API documentation accessibles à tous
-                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
 
                                 // Toute autre requête doit être authentifiée
                                 .anyRequest().authenticated()
