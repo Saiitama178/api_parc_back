@@ -23,40 +23,25 @@ public class PaysRepositoryTest {
     @Test
     public void testGetAllPays(){
         List<Pays> paysList = List.of(new Pays(), new Pays());
-
         when(paysRepository.findAll()).thenReturn(paysList);
-
         List<Pays> result = paysRepository.findAll();
-
         assertNotNull(result);
-
         assertEquals(2, result.size());
     }
-
     @Test
     public void testFindById() {
-        // Given
         Pays pays = new Pays();
         pays.setId(1);
-
         when(paysRepository.findById(1)).thenReturn(java.util.Optional.of(pays));
-        // When
         Pays result = paysRepository.findById(1).get();
-        // Then
         assertNotNull(result);
     }
-
     @Test
     public void testSave(){
-        // Given
         Pays pays = new Pays();
         pays.setId(1);
         when(paysRepository.save(any(Pays.class))).thenReturn(pays);
-
-        // When
         Pays result = paysRepository.save(new Pays());
-
-        // Then
         assertNotNull(result);
         assertEquals(1, result.getId());
     }
