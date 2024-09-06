@@ -38,8 +38,12 @@ public class ConfigurationSecurityApplication {
                                 .requestMatchers(HttpMethod.POST, "/auth/inscription").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/connexion").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/activation").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/auth/deconnexion").permitAll()
 
+                                // Routes restreintes Administrateur & Visiteur
                                 .requestMatchers("/admin/**").hasAuthority("Administrateur")
+                                .requestMatchers("/visiteur/**").hasAuthority("Visiteur")
+                                .requestMatchers("/public/**").permitAll()
 
                                 // Swagger et API documentation accessibles à tous
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
