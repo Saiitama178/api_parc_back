@@ -109,5 +109,6 @@ public class UtilisateurService {
         utilisateurActiver.setIsActive(true);
         this.utilisateurRepository.save(utilisateurActiver);
     }
+
 }
 
