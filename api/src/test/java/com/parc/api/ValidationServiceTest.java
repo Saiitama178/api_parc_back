@@ -99,9 +99,8 @@ public class ValidationServiceTest {
         String code = "   ";  // Code vide
 
         // Act & Assert
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            validationService.LireEnFonctionDuCode(code);
-        });
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                validationService.LireEnFonctionDuCode(code));
 
         assertEquals("Code cannot be null or empty", exception.getMessage());  // Vérifie que l'exception contient le bon message
     }
