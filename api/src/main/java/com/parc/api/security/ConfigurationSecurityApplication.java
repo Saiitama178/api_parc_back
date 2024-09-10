@@ -42,7 +42,7 @@ public class ConfigurationSecurityApplication {
 
                                 // Routes restreintes Administrateur & Visiteur
                                 .requestMatchers("/admin/**").hasAuthority("Administrateur")
-                                .requestMatchers("/visiteur/**").hasAuthority("Visiteur")
+                                .requestMatchers("/utilisateur/**").hasAuthority("Utilisateur")
                                 .requestMatchers("/parcs").permitAll()
 
                                 // Swagger et API documentation accessibles à tous
