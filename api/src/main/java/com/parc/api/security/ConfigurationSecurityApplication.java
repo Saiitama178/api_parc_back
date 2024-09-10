@@ -31,15 +31,19 @@ public class ConfigurationSecurityApplication {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return
                 httpSecurity
-                        .csrf(AbstractHttpConfigurer::disable) // Désactive la protection CSRF. Recommandé uniquement pour les API REST, où les tokens JWT sont utilisés pour protéger les requêtes.
-                        .authorizeHttpRequests(authorize -> authorize
-                                // Routes publiques
-                                .requestMatchers(HttpMethod.POST, "/auth/inscription").permitAll() // Autorise l'accès public à la route d'inscription
-                                .requestMatchers(HttpMethod.POST, "/auth/connexion").permitAll() // Autorise l'accès public à la route de connexion
-                                .requestMatchers(HttpMethod.POST, "/auth/activation").permitAll() // Autorise l'accès public à la route d'activation
-                                .requestMatchers( "/commentaire").permitAll()
-                                .requestMatchers("/admin/**").hasAuthority("Administrateur") // Autorise uniquement les utilisateurs avec l'autorité "Administrateur" à accéder aux routes commençant par /admin/**
+                .csrf(AbstractHttpConfigurer::disable) // consider enabling CSRF protection
+                .authorizeHttpRequests(authorize -> authorize
 
+                        // Routes publiques
+                        .requestMatchers(HttpMethod.POST, "/auth/inscription").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/connexion").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/activation").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/deconnexion").permitAll()
+
+                        // Routes restreintes Administrateur & Visiteur
+                        .requestMatchers("/admin/**").hasAuthority("Administrateur")
+                        .requestMatchers("/visiteur/**").hasAuthority("Visiteur")
+                        .requestMatchers("/parcs").permitAll()
                                 // Swagger et API documentation accessibles à tous
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll() // Autorise l'accès public à la documentation API (Swagger)
 
