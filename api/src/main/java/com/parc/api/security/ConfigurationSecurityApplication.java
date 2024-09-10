@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,40 +22,51 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity()
 @RequiredArgsConstructor
 public class ConfigurationSecurityApplication {
 
     private final JwtFilter jwtFilter;
     private final UserLoaderService userLoaderService;
+    private final UserAuthorizationManager userAuthorizationManager;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return
-                httpSecurity
-                        .csrf(AbstractHttpConfigurer::disable) // consider enabling CSRF protection
-                        .authorizeHttpRequests(authorize -> authorize
+        return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorize -> authorize
+                        // Routes publiques pour l'authentification et l'inscription
+                        .requestMatchers(HttpMethod.POST, "/auth/inscription").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/connexion").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/activation").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/deconnexion").permitAll()
 
-                                // Routes publiques
-                                .requestMatchers(HttpMethod.POST, "/auth/inscription").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/auth/connexion").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/auth/activation").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/auth/deconnexion").permitAll()
+                        // Routes accessibles à tous
+                        .requestMatchers(HttpMethod.GET, "/parcs").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/parcs/{nomParc}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/periodes").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
 
-                                // Routes restreintes Administrateur & Visiteur
-                                .requestMatchers("/admin/**").hasAuthority("Administrateur")
-                                .requestMatchers("/visiteur/**").hasAuthority("Visiteur")
-                                .requestMatchers("/public/**").permitAll()
+                        // Routes accessibles aux visiteurs authentifiés
+                        .requestMatchers(HttpMethod.POST, "/commentaires").hasAuthority("Utilisateur")
 
-                                // Swagger et API documentation accessibles à tous
-                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        // Routes accessibles aux utilisateurs authentifiés
+                        .requestMatchers(HttpMethod.PUT, "/user/{id}")
+                        .access(userAuthorizationManager)
 
-                                // Toute autre requête doit être authentifiée
-                                .anyRequest().authenticated()
-                        )
-                        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                        .build();
+                        // Routes accessibles aux administrateurs
+                        .requestMatchers("/admin/**").hasAuthority("Administrateur")
+
+                        // Toute autre requête doit être authentifiée
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .requiresChannel(channel -> channel
+                        .anyRequest().requiresSecure()) // Redirige HTTP vers HTTPS
+                .build();
     }
+
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

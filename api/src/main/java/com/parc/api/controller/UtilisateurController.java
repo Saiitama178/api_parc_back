@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,7 +43,7 @@ public class UtilisateurController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('Administrateur')")
+    @PreAuthorize("hasAuthority('Administrateur') or @securityService.isCurrentUser(#id, authentication)")
     @Operation(summary = "Obtenir un utilisateur par ID",
             description = "Retourne un utilisateur spécifique basé sur son ID",
             operationId = "utilisateurs",
@@ -55,7 +56,7 @@ public class UtilisateurController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('Visiteur') and #id == authentication.principal.id")
+    @PreAuthorize("hasAuthority('Administrateur') or (@securityService.isCurrentUser(#id, authentication) and hasAuthority('Utilisateur'))")
     @Operation(summary = "Mettre à jour un utilisateur",
             description = "Met à jour les informations d'un utilisateur basé sur son ID",
             operationId = "utilisateurs",
@@ -64,7 +65,7 @@ public class UtilisateurController {
                     @ApiResponse(responseCode = "400", description = "Données invalides"),
                     @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
             })
-    public ResponseEntity<UtilisateurDto> updateUtilisateur(@PathVariable Integer id, @RequestBody UtilisateurDto utilisateurDto) {
+    public ResponseEntity<UtilisateurDto> updateUtilisateur(@PathVariable Integer id, @RequestBody @Valid UtilisateurDto utilisateurDto) {
         return this.utilisateurService.updateUtilisateur(id, utilisateurDto);
     }
 

@@ -17,8 +17,8 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/periode")
-@Tag(name = "periode", description = "Opérations sur les périodes")
+@RequestMapping("/periodes")
+@Tag(name = "periodes", description = "Opérations sur les périodes")
 public class PeriodeController {
 
     private final PeriodeService periodeService;

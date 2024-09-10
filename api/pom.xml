@@ -89,7 +89,6 @@
 			<artifactId>jboss-logging</artifactId>
 			<version>3.4.1.Final</version>
 		</dependency>
-
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>

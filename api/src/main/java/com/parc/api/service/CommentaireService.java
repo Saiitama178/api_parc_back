@@ -27,7 +27,6 @@ public class CommentaireService {
         return ResponseEntity.ok(commentaireDtos);
     }
 
-    @GetMapping("/commentaire/{id}")
     public ResponseEntity<CommentaireDto> getCommentaireById(@PathVariable int id) {
         Optional<Commentaire> CommentaireOptional = commentaireRepository.findById(id);
         if (CommentaireOptional.isPresent()) {
@@ -38,18 +37,19 @@ public class CommentaireService {
         }
     }
 
-    @PostMapping("/Commentaire")
     public ResponseEntity<CommentaireDto> createCommentaire(@RequestBody CommentaireDto commentaireDto) {
         if (commentaireDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    
         Commentaire commentaire = CommentaireMapper.toEntity(commentaireDto);
+
         Commentaire savedCommentaire = commentaireRepository.save(commentaire);
         CommentaireDto savedCommentaireDto = CommentaireMapper.toDto(savedCommentaire);
         return new ResponseEntity<>(savedCommentaireDto, HttpStatus.CREATED);
+      
     }
 
-    @PutMapping("/Commentaire/{id}")
     public ResponseEntity<CommentaireDto> updateCommentaire(@PathVariable int id, @RequestBody CommentaireDto commentaireDto) {
         Optional<Commentaire> foundCommentaireOptional = commentaireRepository.findById(id);
         if (foundCommentaireOptional.isPresent()) {
@@ -64,7 +64,6 @@ public class CommentaireService {
         }
     }
 
-    @DeleteMapping("/Commentaire/{id}")
     public ResponseEntity<CommentaireDto> deleteCommentaire(@PathVariable int id) {
         Optional<Commentaire> CommentaireOptional = commentaireRepository.findById(id);
         if (CommentaireOptional.isPresent()) {

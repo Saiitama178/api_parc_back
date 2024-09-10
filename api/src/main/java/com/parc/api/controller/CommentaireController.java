@@ -5,6 +5,7 @@ import com.parc.api.service.CommentaireService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/commentaire")
+@RequestMapping("/commentaires")
 @Tag(name = "commentaire", description = "Opérations sur les commentaires")
 public class CommentaireController {
 
@@ -45,7 +46,7 @@ public class CommentaireController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('Visiteur')")
+    @PreAuthorize("hasAuthority('Utilisateur')")
     @Operation(summary = "Crée un nouveau commentaire",
             description = "Ajoute un nouveau commentaire à la base de données.",
             operationId = "commentaire",
@@ -53,12 +54,12 @@ public class CommentaireController {
                     @ApiResponse(responseCode = "201", description = "Commentaire créé"),
                     @ApiResponse(responseCode = "400", description = "Requête invalide")
             })
-    public ResponseEntity<CommentaireDto> createCommentaire(@RequestBody CommentaireDto commentaireDto) {
+    public ResponseEntity<CommentaireDto> createCommentaire(@Valid @RequestBody CommentaireDto commentaireDto) {
         return this.commentaireService.createCommentaire(commentaireDto);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("('Visiteur')")
+    @PreAuthorize("hasAuthority('Utilisateur')")
     @Operation(
             summary = "Met à jour un commentaire",
             description = "Met à jour les informations d'un commentaire existant basé sur son ID.",
