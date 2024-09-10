@@ -6,8 +6,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
 import java.util.Collection;
 import java.util.Collections;
+
 
 @RequiredArgsConstructor // Génère automatiquement un constructeur avec tous les champs "final" injectés (ici "utilisateur").
 public class CustomUserDetail implements UserDetails {

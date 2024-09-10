@@ -48,10 +48,13 @@ public class CommentaireService {
         if (commentaireDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    
         Commentaire commentaire = CommentaireMapper.toEntity(commentaireDto);
+
         Commentaire savedCommentaire = commentaireRepository.save(commentaire);
         CommentaireDto savedCommentaireDto = CommentaireMapper.toDto(savedCommentaire);
         return new ResponseEntity<>(savedCommentaireDto, HttpStatus.CREATED);
+      
     }
 
     public ResponseEntity<CommentaireDto> updateCommentaire(@PathVariable int id, @RequestBody CommentaireDto commentaireDto) {

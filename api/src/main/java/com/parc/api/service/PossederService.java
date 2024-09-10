@@ -58,7 +58,6 @@ public class PossederService {
         }
     }
 
-    @PutMapping("/posseder/{id}")
     public ResponseEntity<PossederDto> updatePosseder(@PathVariable Integer id, @RequestBody PossederDto possederDto) {
         Optional<Posseder> existingPosseder = possederRepository.findById(id);
         if (existingPosseder.isPresent()) {
