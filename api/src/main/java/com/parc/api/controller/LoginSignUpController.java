@@ -43,7 +43,8 @@ public class LoginSignUpController {
             description = "Authentifie un utilisateur et retourne un token JWT",
             operationId = "connexion",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Authentification réussie", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class))),
+                    @ApiResponse(responseCode = "200", description = "Authentification réussie", content = @Content(mediaType = "application/json"
+                            , schema = @Schema(implementation = Map.class))),
                     @ApiResponse(responseCode = "400", description = "Informations d'identification invalides")
             })
     public ResponseEntity<Map<String, String>> connexion(@RequestBody AuthentificationDTO authentificationDTO) {
@@ -51,13 +52,9 @@ public class LoginSignUpController {
             final Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authentificationDTO.email(), authentificationDTO.password())
             );
-
             if (authentication.isAuthenticated()) {
-
                 log.info("Authentification réussie");
-
                 String token = jwtService.generateToken(authentificationDTO.email());
-
                 return ResponseEntity.ok(Map.of("token", token));
             } else {
                 log.info("Authentification échouée");
@@ -74,7 +71,8 @@ public class LoginSignUpController {
             description = "Crée un nouvel utilisateur",
             operationId = "inscription",
             responses = {
-                    @ApiResponse(responseCode = "201", description = "Utilisateur créé", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UtilisateurDto.class))),
+                    @ApiResponse(responseCode = "201", description = "Utilisateur créé"
+                            , content = @Content(mediaType = "application/json", schema = @Schema(implementation = UtilisateurDto.class))),
                     @ApiResponse(responseCode = "400", description = "Données invalides")
             })
     public ResponseEntity<UtilisateurDto> inscription(@RequestBody UtilisateurDto utilisateurDto) {
