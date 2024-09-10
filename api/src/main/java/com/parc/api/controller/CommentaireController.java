@@ -44,7 +44,27 @@ public class CommentaireController {
         return this.commentaireService.getCommentaireById(id);
     }
 
-    @PostMapping
+    @PostMapping("/create")
+    @Operation(
+            summary = "Crée un commentaire par ID Utilisateur et ID Parc",
+            description = "Ajoute un nouveau commentaire à la base de données.",
+            operationId = "commentaire",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Commentaire trouvé"),
+                    @ApiResponse(responseCode = "404", description = "Commentaire non trouvé")
+            })
+
+    public ResponseEntity<CommentaireDto> createCommentaire(@RequestBody CommentaireDto request) {
+        return commentaireService.createCommentaireWithIds(
+                request.getIdUtilisateur().getId(),
+                request.getIdUtilisateur().getId(),
+                request.getContenuCommentaire(),
+                request.getNoteParc()
+        );
+    }
+
+
+   /* @PostMapping
     @PreAuthorize("hasAuthority('Visiteur')")
     @Operation(summary = "Crée un nouveau commentaire",
             description = "Ajoute un nouveau commentaire à la base de données.",
@@ -55,7 +75,7 @@ public class CommentaireController {
             })
     public ResponseEntity<CommentaireDto> createCommentaire(@RequestBody CommentaireDto commentaireDto) {
         return this.commentaireService.createCommentaire(commentaireDto);
-    }
+    }*/
 
     @PutMapping("/{id}")
     @PreAuthorize("('Visiteur')")
