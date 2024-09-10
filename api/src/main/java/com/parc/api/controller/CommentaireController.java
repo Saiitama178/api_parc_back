@@ -45,6 +45,7 @@ public class CommentaireController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('Utilisateur')")
     @Operation(
             summary = "Crée un commentaire par ID Utilisateur et ID Parc",
             description = "Ajoute un nouveau commentaire à la base de données.",
