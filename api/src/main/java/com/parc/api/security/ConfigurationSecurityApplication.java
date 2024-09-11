@@ -28,22 +28,31 @@ public class ConfigurationSecurityApplication {
     private final UserLoaderService userLoaderService;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, UserAuthorizationManager userAuthorizationManager) throws Exception {
         return
                 httpSecurity
                         .csrf(AbstractHttpConfigurer::disable) // consider enabling CSRF protection
                         .authorizeHttpRequests(authorize -> authorize
 
-                                // Routes publiques
+                                // Routes publiques pour l'authentification et l'inscription
                                 .requestMatchers(HttpMethod.POST, "/auth/inscription").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/connexion").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/activation").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/deconnexion").permitAll()
 
-                                // Routes restreintes Administrateur & Visiteur
+                                // Routes publiques accessibles à tous
+                                .requestMatchers(HttpMethod.GET,"/parcs").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/parcs/{nomParc}").permitAll()
+
+                                // Routes accessibles aux utilisateurs authentifiés avec le rôle 'Utilisateur'
+                                .requestMatchers(HttpMethod.POST, "/commentaires").hasAuthority("Utilisateur")
+                                .requestMatchers(HttpMethod.POST, "/parcs/{id}/notes").hasAuthority("Utilisateur")
+
+                                // Routes accessibles aux utilisateurs authentifiés pouvant modifier leur propre profil
+                                .requestMatchers(HttpMethod.PUT, "/user/{id}").access(userAuthorizationManager)
+
+                                // Routes accessibles aux administrateurs
                                 .requestMatchers("/admin/**").hasAuthority("Administrateur")
-                                .requestMatchers("/utilisateur/**").hasAuthority("Utilisateur")
-                                .requestMatchers("/parcs").permitAll()
 
                                 // Swagger et API documentation accessibles à tous
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()

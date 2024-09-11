@@ -56,5 +56,9 @@ public class CustomUserDetail implements UserDetails {
         // Si "isActive" est true, l'utilisateur est autorisé à se connecter, sinon il est désactivé.
         return utilisateur.getIsActive();
     }
+
+    public int getId() {
+        return utilisateur.getId();
+    }
 }
 

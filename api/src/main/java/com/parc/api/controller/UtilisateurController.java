@@ -1,7 +1,6 @@
 package com.parc.api.controller;
 
 import com.parc.api.model.dto.UtilisateurDto;
-import com.parc.api.service.JwtService;
 import com.parc.api.service.UtilisateurService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,7 +11,6 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +22,6 @@ import java.util.List;
 @Tag(name = "utilisateur", description = "Opérations sur les utilisateurs")
 public class UtilisateurController {
 
-    private final JwtService jwtService;
-    private AuthenticationManager authenticationManager;
     private final UtilisateurService utilisateurService;
 
 
@@ -43,7 +39,7 @@ public class UtilisateurController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('Administrateur') or @securityService.isCurrentUser(#id, authentication)")
+    @PreAuthorize("hasAuthority('Administrateur') or @securityService.isCurrentUserOrAdmin(#id, authentication)")
     @Operation(summary = "Obtenir un utilisateur par ID",
             description = "Retourne un utilisateur spécifique basé sur son ID",
             operationId = "utilisateurs",
@@ -56,7 +52,7 @@ public class UtilisateurController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('Administrateur') or (@securityService.isCurrentUser(#id, authentication) and hasAuthority('Utilisateur'))")
+    @PreAuthorize("hasAuthority('Administrateur') or (@securityService.isCurrentUserOrAdmin(#id, authentication) and hasAuthority('Utilisateur'))")
     @Operation(summary = "Mettre à jour un utilisateur",
             description = "Met à jour les informations d'un utilisateur basé sur son ID",
             operationId = "utilisateurs",

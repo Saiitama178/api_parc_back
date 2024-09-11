@@ -22,7 +22,7 @@ public class UserAuthorizationManager implements AuthorizationManager<RequestAut
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
         Integer userId = Integer.valueOf(context.getRequest().getParameter("id"));
         Authentication auth = authentication.get();
-        return new AuthorizationDecision(securityService.isCurrentUser(userId, auth));
+        return new AuthorizationDecision(securityService.isCurrentUserOrAdmin(userId, auth));
     }
 }
 
