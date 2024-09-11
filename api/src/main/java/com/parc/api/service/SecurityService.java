@@ -9,9 +9,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SecurityService {
 
-    public boolean isCurrentUser(Integer userId, Authentication authentication) {
+    public boolean isCurrentUserOrAdmin(Integer userId, Authentication authentication) {
         CustomUserDetail userDetail = (CustomUserDetail) authentication.getPrincipal();
-        return userDetail.getId().equals(userId);
+
+        // Vérifie si l'utilisateur est un administrateur
+        boolean isAdmin = userDetail.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+
+        // Retourne true si l'utilisateur est soit l'utilisateur connecté, soit un administrateur
+        return userDetail.getId() == userId || isAdmin;
     }
 }
 
